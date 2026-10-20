@@ -1,8 +1,9 @@
 import bcrypt from 'bcryptjs';
+import { fileURLToPath } from 'url';
 import { getDbPool } from './pool.js';
 
-export async function seedInitialData() {
-  const pool = await getDbPool();
+export async function seedInitialData(targetPool) {
+  const pool = targetPool || (await getDbPool());
 
   const ownerUsername = process.env.INITIAL_OWNER_USERNAME || 'owner';
   const ownerPin = process.env.INITIAL_OWNER_PIN || '7860';
@@ -13,7 +14,7 @@ export async function seedInitialData() {
   const ownerHash = await bcrypt.hash(ownerPin, rounds);
   const cashierHash = await bcrypt.hash(cashierPin, rounds);
 
-  // 1. Station Config
+  // 1. Station Config (Do not overwrite existing station configuration)
   await pool.query(`
     INSERT INTO station_config (
       id, station_name, station_name_urdu, address, phone, owner_name, currency,
@@ -23,22 +24,20 @@ export async function seedInitialData() {
       'Main National Highway, Quetta-Karachi Road', '0300-1234567',
       'Haji Hadi Khan', 'PKR', 279.75, 285.50, 268.00, 273.50
     )
-    ON CONFLICT (id) DO UPDATE SET
-      station_name = EXCLUDED.station_name,
-      owner_name = EXCLUDED.owner_name;
+    ON CONFLICT (id) DO NOTHING;
   `);
 
-  // 2. Users
+  // 2. Users (Do not overwrite existing user accounts or reset modified passwords)
   await pool.query(`
     INSERT INTO users (username, role, name, password_hash)
     VALUES ($1, 'owner', 'Haji Hadi (Owner)', $2)
-    ON CONFLICT (username) DO UPDATE SET password_hash = EXCLUDED.password_hash;
+    ON CONFLICT (username) DO NOTHING;
   `, [ownerUsername, ownerHash]);
 
   await pool.query(`
     INSERT INTO users (username, role, name, password_hash)
     VALUES ($1, 'cashier', 'Shift Operator', $2)
-    ON CONFLICT (username) DO UPDATE SET password_hash = EXCLUDED.password_hash;
+    ON CONFLICT (username) DO NOTHING;
   `, [cashierUsername, cashierHash]);
 
   // 3. Tanks
@@ -64,7 +63,7 @@ export async function seedInitialData() {
   console.log('Initial station configuration, users, tanks, and nozzles seeded.');
 }
 
-if (process.argv[1] === import.meta.url) {
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
   seedInitialData()
     .then(() => process.exit(0))
     .catch((err) => {

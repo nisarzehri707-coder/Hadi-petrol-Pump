@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useApp } from './context/AppContext';
 import { Header } from './components/Header';
 import { BottomNav } from './components/BottomNav';
@@ -17,6 +17,12 @@ export const App = () => {
   const { data, activeTab, setActiveTab, toast, isOnline, currentUser, language } = useApp();
   const station = data?.station || { name: 'HADI PETROL PUMP' };
   const isUrdu = language === 'ur';
+
+  // Synchronize document direction and language attribute
+  useEffect(() => {
+    document.documentElement.dir = isUrdu ? 'rtl' : 'ltr';
+    document.documentElement.lang = isUrdu ? 'ur' : 'en';
+  }, [isUrdu]);
 
   // If user is not logged in, render the login portal
   if (!currentUser) {
@@ -84,14 +90,21 @@ export const App = () => {
   };
 
   return (
-    <div className="min-h-screen w-full flex flex-col font-sans overflow-x-hidden"
-         style={{ background: 'var(--color-bg)', color: 'var(--color-text-primary)' }}>
+    <div
+      className={`min-h-screen w-full flex flex-col overflow-x-hidden ${isUrdu ? 'font-urdu' : 'font-sans'}`}
+      dir={isUrdu ? 'rtl' : 'ltr'}
+      style={{ background: 'var(--color-bg)', color: 'var(--color-text-primary)' }}
+    >
       
       {/* Offline Alert Strip */}
       {!isOnline && (
         <div className="bg-amber-500 text-white text-xs font-semibold py-2 px-4 text-center flex items-center justify-center gap-2 sticky top-0 z-50">
           <WifiOff className="w-3.5 h-3.5 flex-shrink-0" />
-          <span>Working offline — data saved locally until connection is restored.</span>
+          <span>
+            {isUrdu 
+              ? 'آپ آف لائن ہیں — انٹرنیٹ کنکشن بحال ہونے تک ڈیٹا لوکل محفوظ ہو رہا ہے۔' 
+              : 'Working offline — data saved locally until connection is restored.'}
+          </span>
         </div>
       )}
 
@@ -106,14 +119,17 @@ export const App = () => {
         </main>
 
         {/* Footer */}
-        <footer className="w-full border-t py-3 px-4 text-center text-xs mb-14 md:mb-0"
-                style={{ borderColor: 'var(--color-border)', color: 'var(--color-text-muted)', background: 'var(--color-surface)' }}>
+        <footer
+          className="w-full border-t py-3 px-4 text-center text-xs mb-14 md:mb-0"
+          style={{ borderColor: 'var(--color-border)', color: 'var(--color-text-muted)', background: 'var(--color-surface)' }}
+        >
           <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-1">
             <span className="font-medium" style={{ color: 'var(--color-text-secondary)' }}>
-              {station.name} · Fuel Station Management System V4.0
+              {isUrdu ? (station.nameUrdu || station.name) : station.name} · {isUrdu ? 'فیول اسٹیشن مینجمنٹ سسٹم' : 'Fuel Station Management System V4.0'}
             </span>
             <span>
-              Developed by <span className="font-bold" style={{ color: 'var(--color-text-primary)' }}>Nisar</span>
+              {isUrdu ? 'تیار کردہ: ' : 'Developed by '}
+              <span className="font-bold" style={{ color: 'var(--color-text-primary)' }}>Nisar</span>
             </span>
           </div>
         </footer>

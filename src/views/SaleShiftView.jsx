@@ -269,13 +269,13 @@ export const SaleShiftView = () => {
       
       {/* Top Banner: Same Storage Tank Live Levels */}
       <div className="p-3.5 md:p-4 rounded-2xl md:rounded-3xl bg-white border border-slate-200 shadow-sm space-y-2">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-100">
+            <div className="p-2 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-100 flex-shrink-0">
               <Layers className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-sm md:text-base font-bold text-slate-900 flex items-center gap-2">
+              <h2 className="text-sm md:text-base font-bold text-slate-900 flex items-center gap-2 font-urdu">
                 <span>{isUrdu ? 'مشترکہ اسٹوریج ٹینک (ایک اسٹاک، دو آپریشنز)' : 'Unified Storage Tank (Same Storage, Dual Operations)'}</span>
               </h2>
               <p className="text-[11px] text-slate-500 font-urdu mt-0.5">
@@ -288,18 +288,22 @@ export const SaleShiftView = () => {
 
           {/* Real-time Tank Gauges Chips */}
           <div className="flex items-center gap-2 flex-wrap">
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-emerald-50/80 border border-emerald-200">
-              <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
-              <span className="text-[11px] text-slate-600 font-bold">Petrol Tank:</span>
-              <span className="text-xs font-mono font-black text-emerald-700">
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-emerald-50/80 border border-emerald-200 shadow-xs">
+              <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse flex-shrink-0"></span>
+              <span className="text-[11px] text-slate-700 font-bold font-urdu">
+                {isUrdu ? 'پٹرول ٹینک:' : 'Petrol Tank:'}
+              </span>
+              <span className="text-xs font-mono font-black text-emerald-700 tabular-nums" dir="ltr">
                 {formatLitres(tanks?.petrol?.currentStock || 0)}
               </span>
             </div>
 
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-amber-50/80 border border-amber-200">
-              <span className="w-2 h-2 rounded-full bg-amber-600 animate-pulse"></span>
-              <span className="text-[11px] text-slate-600 font-bold">Diesel Tank:</span>
-              <span className="text-xs font-mono font-black text-amber-700">
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-amber-50/80 border border-amber-200 shadow-xs">
+              <span className="w-2 h-2 rounded-full bg-amber-600 animate-pulse flex-shrink-0"></span>
+              <span className="text-[11px] text-slate-700 font-bold font-urdu">
+                {isUrdu ? 'ڈیزل ٹینک:' : 'Diesel Tank:'}
+              </span>
+              <span className="text-xs font-mono font-black text-amber-700 tabular-nums" dir="ltr">
                 {formatLitres(tanks?.diesel?.currentStock || 0)}
               </span>
             </div>
@@ -308,31 +312,31 @@ export const SaleShiftView = () => {
       </div>
 
       {/* Primary Operation Mode Switcher: Retail vs Bulk Dumping */}
-      <div className="grid grid-cols-2 p-1.5 bg-slate-100 border border-slate-200 rounded-2xl text-xs font-bold shadow-sm gap-1">
+      <div className="grid grid-cols-2 p-1.5 bg-slate-100 border border-slate-200 rounded-2xl text-xs font-bold shadow-sm gap-1.5">
         <button
           type="button"
           onClick={() => setOperationTab('retail')}
-          className={`py-3 rounded-xl transition-all flex items-center justify-center gap-2 ${
+          className={`py-3 px-2 rounded-xl transition-all flex items-center justify-center gap-2 font-urdu ${
             operationTab === 'retail'
               ? 'bg-emerald-700 text-white font-bold shadow-sm'
-              : 'text-slate-600 hover:text-slate-900'
+              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
           }`}
         >
-          <Fuel className="w-4 h-4" />
-          <span>{isUrdu ? '۱. ریٹیل فروخت بذریعہ نوزل / میٹر' : '1. Retail Sale via Nozzle Meter'}</span>
+          <Fuel className="w-4 h-4 flex-shrink-0" />
+          <span className="truncate">{isUrdu ? '۱. ریٹیل فروخت بذریعہ نوزل / میٹر' : '1. Retail Sale via Nozzle Meter'}</span>
         </button>
 
         <button
           type="button"
           onClick={() => setOperationTab('bulk')}
-          className={`py-3 rounded-xl transition-all flex items-center justify-center gap-2 ${
+          className={`py-3 px-2 rounded-xl transition-all flex items-center justify-center gap-2 font-urdu ${
             operationTab === 'bulk'
               ? 'bg-amber-600 text-white font-bold shadow-sm'
-              : 'text-slate-600 hover:text-slate-900'
+              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
           }`}
         >
-          <Truck className="w-4 h-4" />
-          <span>{isUrdu ? '۲. بلک ڈمپنگ برائے دیگر گاڑیاں' : '2. Bulk Dumping into Vehicles'}</span>
+          <Truck className="w-4 h-4 flex-shrink-0" />
+          <span className="truncate">{isUrdu ? '۲. بلک ڈمپنگ برائے دیگر گاڑیاں' : '2. Bulk Dumping into Vehicles'}</span>
         </button>
       </div>
 
@@ -343,29 +347,29 @@ export const SaleShiftView = () => {
         <div className="space-y-4 animate-in fade-in duration-200">
           
           {/* Sub-view switcher: Record Shift vs Shift Log History */}
-          <div className="flex items-center justify-between px-1">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-1">
             <span className="text-xs font-bold text-slate-500 font-urdu">
               {isUrdu ? 'نوزل ریڈنگ اور کیش حساب کتاب درج کریں' : 'Dispenser meter readings & cash settlement'}
             </span>
 
-            <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs font-bold">
+            <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs font-bold self-start sm:self-auto">
               <button
                 type="button"
                 onClick={() => setRetailSubView('record')}
-                className={`px-3 py-1.5 rounded-lg transition-all ${
+                className={`px-3 py-1.5 rounded-lg transition-all font-urdu ${
                   retailSubView === 'record' ? 'bg-white text-emerald-800 font-bold shadow-sm' : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
-                + Record Reading
+                {isUrdu ? '+ نئی ریڈنگ درج کریں' : '+ Record Reading'}
               </button>
               <button
                 type="button"
                 onClick={() => setRetailSubView('history')}
-                className={`px-3 py-1.5 rounded-lg transition-all ${
+                className={`px-3 py-1.5 rounded-lg transition-all font-urdu ${
                   retailSubView === 'history' ? 'bg-white text-emerald-800 font-bold shadow-sm' : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
-                Shift Logs ({sales.length})
+                {isUrdu ? `شفٹ لاگز (${sales.length})` : `Shift Logs (${sales.length})`}
               </button>
             </div>
           </div>
@@ -387,7 +391,7 @@ export const SaleShiftView = () => {
                         key={noz.id}
                         type="button"
                         onClick={() => setSelectedNozzleId(noz.id)}
-                        className={`flex flex-col p-2.5 rounded-xl border text-left transition-all active:scale-95 ${
+                        className={`flex flex-col p-2.5 rounded-xl border text-start transition-all active:scale-95 ${
                           isSelected
                             ? isPetrolNoz
                               ? 'bg-emerald-50 border-emerald-600 text-emerald-900 ring-1 ring-emerald-600 shadow-sm'
@@ -400,8 +404,8 @@ export const SaleShiftView = () => {
                           <span className={`w-2 h-2 rounded-full ${isPetrolNoz ? 'bg-emerald-600' : 'bg-amber-500'}`}></span>
                         </div>
                         <span className="text-[10px] truncate mt-0.5 font-medium">{noz.label}</span>
-                        <span className="text-[10px] font-mono opacity-80 mt-1">
-                          Last: {noz.lastMeter !== undefined ? Number(noz.lastMeter).toFixed(1) : 0} L
+                        <span className="text-[10px] font-mono opacity-80 mt-1" dir="ltr">
+                          {isUrdu ? 'سابقہ میٹر: ' : 'Last: '}{noz.lastMeter !== undefined ? Number(noz.lastMeter).toFixed(1) : 0} L
                         </span>
                       </button>
                     );
@@ -414,55 +418,58 @@ export const SaleShiftView = () => {
                 
                 {/* Meter Readings Card */}
                 <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-3">
-                  <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+                  <div className="flex items-center justify-between border-b border-slate-100 pb-2 flex-wrap gap-2">
                     <span className="text-xs font-bold text-slate-900 flex items-center gap-1.5 font-urdu">
-                      <Calculator className="w-4 h-4 text-emerald-600" />
+                      <Calculator className="w-4 h-4 text-emerald-600 flex-shrink-0" />
                       <span>{isUrdu ? '۱. میٹر کی پیمائش (لیٹرز)' : '1. Meter Readings (Litres)'}</span>
                     </span>
-                    <span className="text-[10px] font-mono text-slate-500">
-                      Storage Stock: {formatLitres(currentTankStockRetail)}
+                    <span className="text-[10px] font-mono text-slate-500" dir="ltr">
+                      {isUrdu ? 'دستیاب اسٹوریج: ' : 'Storage Stock: '}{formatLitres(currentTankStockRetail)}
                     </span>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <div>
-                      <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block mb-1">
-                        Opening Meter
+                      <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block mb-1 font-urdu">
+                        {isUrdu ? 'ابتدائی میٹر (Opening)' : 'Opening Meter'}
                       </label>
                       <input
                         type="number"
                         step="any"
                         value={openingMeter}
                         onChange={(e) => setOpeningMeter(e.target.value)}
+                        dir="ltr"
                         className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm font-mono font-bold text-slate-800 focus:bg-white focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600"
                         required
                       />
                     </div>
 
                     <div>
-                      <label className="text-[10px] font-bold text-emerald-700 uppercase tracking-wider block mb-1">
-                        Closing Meter
+                      <label className="text-[10px] font-bold text-emerald-700 uppercase tracking-wider block mb-1 font-urdu">
+                        {isUrdu ? 'موجودہ میٹر (Closing)' : 'Closing Meter'}
                       </label>
                       <input
                         type="number"
                         step="any"
                         value={closingMeter}
                         onChange={(e) => setClosingMeter(e.target.value)}
-                        placeholder="Current reading"
+                        placeholder={isUrdu ? 'موجودہ ریڈنگ درج کریں' : 'Current reading'}
+                        dir="ltr"
                         className="w-full bg-emerald-50/50 border border-emerald-500 rounded-xl px-3 py-2 text-sm font-mono font-black text-emerald-900 focus:bg-white focus:outline-none focus:ring-1 focus:ring-emerald-600"
                         required
                       />
                     </div>
 
                     <div>
-                      <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block mb-1">
-                        Selling Rate / Litre
+                      <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block mb-1 font-urdu">
+                        {isUrdu ? 'فروخت ریٹ فی لیٹر' : 'Selling Rate / Litre'}
                       </label>
                       <input
                         type="number"
                         step="0.1"
                         value={sellingRateRetail}
                         onChange={(e) => setSellingRateRetail(e.target.value)}
+                        dir="ltr"
                         className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm font-mono font-bold text-slate-800 focus:bg-white focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600"
                         required
                       />
@@ -472,14 +479,18 @@ export const SaleShiftView = () => {
                   {/* Liters Sold & Total Sales Strip */}
                   <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
                     <div>
-                      <span className="text-[10px] text-slate-500 uppercase font-bold block">Volume Sold</span>
-                      <span className="text-base font-black font-mono text-slate-900 mt-0.5 block">
+                      <span className="text-[10px] text-slate-500 uppercase font-bold block font-urdu">
+                        {isUrdu ? 'فروخت شدہ مقدار' : 'Volume Sold'}
+                      </span>
+                      <span className="text-base font-black font-mono text-slate-900 mt-0.5 block" dir="ltr">
                         {formatLitres(retailLitresSold)}
                       </span>
                     </div>
-                    <div className="text-right">
-                      <span className="text-[10px] text-slate-500 uppercase font-bold block">Expected Value</span>
-                      <span className="text-base font-black font-mono text-emerald-700 mt-0.5 block">
+                    <div className="text-end">
+                      <span className="text-[10px] text-slate-500 uppercase font-bold block font-urdu">
+                        {isUrdu ? 'کل متوقع رقم' : 'Expected Value'}
+                      </span>
+                      <span className="text-base font-black font-mono text-emerald-700 mt-0.5 block" dir="ltr">
                         {formatPKR(retailTotalSaleValue)}
                       </span>
                     </div>
@@ -488,20 +499,20 @@ export const SaleShiftView = () => {
 
                 {/* Cash Settlement Card */}
                 <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-3">
-                  <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+                  <div className="flex items-center justify-between border-b border-slate-100 pb-2 flex-wrap gap-2">
                     <span className="text-xs font-bold text-slate-900 flex items-center gap-1.5 font-urdu">
-                      <Wallet className="w-4 h-4 text-emerald-600" />
+                      <Wallet className="w-4 h-4 text-emerald-600 flex-shrink-0" />
                       <span>{isUrdu ? '۲. نقد کیش وصولی و ادھار' : '2. Cash Collection & Credit Settlement'}</span>
                     </span>
-                    <span className="text-[10px] font-mono text-slate-500">
-                      Total: {formatPKR(retailTotalSaleValue)}
+                    <span className="text-[10px] font-mono text-slate-500" dir="ltr">
+                      {isUrdu ? 'کل رقم: ' : 'Total: '}{formatPKR(retailTotalSaleValue)}
                     </span>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                      <label className="text-[10px] font-bold text-slate-500 uppercase block mb-1">
-                        Cash Collected in Hand
+                      <label className="text-[10px] font-bold text-slate-500 uppercase block mb-1 font-urdu">
+                        {isUrdu ? 'وصول شدہ نقد رقم (Cash)' : 'Cash Collected in Hand'}
                       </label>
                       <input
                         type="number"
@@ -509,14 +520,15 @@ export const SaleShiftView = () => {
                         placeholder="0.00"
                         value={cashReceived}
                         onChange={(e) => setCashReceived(e.target.value)}
+                        dir="ltr"
                         className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm font-mono font-bold text-emerald-700 focus:bg-white focus:outline-none focus:border-emerald-600"
                         required
                       />
                     </div>
 
                     <div>
-                      <label className="text-[10px] font-bold text-slate-500 uppercase block mb-1">
-                        Credit / Khata Given in Shift
+                      <label className="text-[10px] font-bold text-slate-500 uppercase block mb-1 font-urdu">
+                        {isUrdu ? 'دی گئی ادھار رقم (Credit / Khata)' : 'Credit / Khata Given in Shift'}
                       </label>
                       <input
                         type="number"
@@ -524,6 +536,7 @@ export const SaleShiftView = () => {
                         placeholder="0.00"
                         value={creditIssued}
                         onChange={(e) => setCreditIssued(e.target.value)}
+                        dir="ltr"
                         className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm font-mono font-bold text-sky-700 focus:bg-white focus:outline-none focus:border-sky-600"
                       />
                     </div>
@@ -543,19 +556,19 @@ export const SaleShiftView = () => {
                             const found = customers.find(c => c.id === e.target.value);
                             if (found) setCreditCustomerName(found.name);
                           }}
-                          className="bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:border-emerald-600"
+                          className="bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:border-emerald-600 font-urdu"
                         >
-                          <option value="">-- Select Existing Ledger Customer --</option>
+                          <option value="">{isUrdu ? '-- کھاتہ دار منتخب کریں --' : '-- Select Existing Ledger Customer --'}</option>
                           {customers.map(c => (
                             <option key={c.id} value={c.id}>{c.name} ({c.vehicleNo})</option>
                           ))}
                         </select>
                         <input
                           type="text"
-                          placeholder="Or type customer name / vehicle"
+                          placeholder={isUrdu ? 'یا گاہک کا نام / گاڑی درج کریں' : 'Or type customer name / vehicle'}
                           value={creditCustomerName}
                           onChange={(e) => setCreditCustomerName(e.target.value)}
-                          className="bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:border-emerald-600"
+                          className="bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:border-emerald-600 font-urdu"
                         />
                       </div>
                     </div>
@@ -563,49 +576,53 @@ export const SaleShiftView = () => {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
                     <div>
-                      <label className="text-[10px] font-bold text-slate-500 uppercase block mb-1">
-                        Operator / Shift In-Charge
+                      <label className="text-[10px] font-bold text-slate-500 uppercase block mb-1 font-urdu">
+                        {isUrdu ? 'آپریٹر / شفٹ انچارج' : 'Operator / Shift In-Charge'}
                       </label>
                       <input
                         type="text"
                         value={operatorName}
                         onChange={(e) => setOperatorName(e.target.value)}
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:bg-white focus:outline-none focus:border-emerald-600"
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:bg-white focus:outline-none focus:border-emerald-600 font-urdu"
                       />
                     </div>
 
                     <div>
-                      <label className="text-[10px] font-bold text-slate-500 uppercase block mb-1">
-                        Shift Notes / Remarks
+                      <label className="text-[10px] font-bold text-slate-500 uppercase block mb-1 font-urdu">
+                        {isUrdu ? 'شفٹ ریمارکس / نوٹس' : 'Shift Notes / Remarks'}
                       </label>
                       <input
                         type="text"
-                        placeholder="e.g. Dispenser calibration ok"
+                        placeholder={isUrdu ? 'مثال: نوزل کی پیمائش درست ہے' : 'e.g. Dispenser calibration ok'}
                         value={retailNotes}
                         onChange={(e) => setRetailNotes(e.target.value)}
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:bg-white focus:outline-none focus:border-emerald-600"
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:bg-white focus:outline-none focus:border-emerald-600 font-urdu"
                       />
                     </div>
                   </div>
 
                   {/* Cash Settlement Status Pill */}
-                  <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between text-xs">
-                    <span className="text-slate-600">
-                      Settlement Variance:
+                  <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between text-xs flex-wrap gap-2">
+                    <span className="text-slate-600 font-urdu">
+                      {isUrdu ? 'کیش فرق (Settlement Variance):' : 'Settlement Variance:'}
                     </span>
                     <span className={`font-mono font-bold ${
                       isExactSettlement ? 'text-emerald-700' : variance > 0 ? 'text-red-600' : 'text-sky-700'
-                    }`}>
-                      {isExactSettlement ? '✓ Perfect Match (0 Variance)' : variance > 0 ? `Shortage: -${formatPKR(variance)}` : `Surplus: +${formatPKR(Math.abs(variance))}`}
+                    }`} dir="ltr">
+                      {isExactSettlement 
+                        ? (isUrdu ? '✓ بالکل برابر (کوئی فرق نہیں)' : '✓ Perfect Match (0 Variance)') 
+                        : variance > 0 
+                          ? `${isUrdu ? 'کمی: -' : 'Shortage: -'}${formatPKR(variance)}` 
+                          : `${isUrdu ? 'اضافی: +' : 'Surplus: +'}${formatPKR(Math.abs(variance))}`}
                     </span>
                   </div>
 
                   <button
                     type="submit"
-                    className="w-full py-3.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs tracking-wider uppercase transition-all shadow-sm active:scale-95 flex items-center justify-center gap-2"
+                    className="w-full py-3.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs tracking-wider uppercase transition-all shadow-sm active:scale-95 flex items-center justify-center gap-2 font-urdu"
                   >
-                    <CheckCircle2 className="w-4 h-4" />
-                    <span>Confirm Shift Closing & Deduct Storage</span>
+                    <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
+                    <span>{isUrdu ? 'شفٹ بند کریں اور ٹینک اسٹاک کم کریں' : 'Confirm Shift Closing & Deduct Storage'}</span>
                   </button>
                 </div>
 
@@ -615,49 +632,49 @@ export const SaleShiftView = () => {
             /* Retail Shift Log History View */
             <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-3">
               <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                <span className="text-xs font-bold uppercase text-emerald-800 flex items-center gap-1.5">
-                  <FileSpreadsheet className="w-4 h-4 text-emerald-600" />
-                  <span>Retail Dispenser Shift Closing Log</span>
+                <span className="text-xs font-bold uppercase text-emerald-800 flex items-center gap-1.5 font-urdu">
+                  <FileSpreadsheet className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                  <span>{isUrdu ? 'ریٹیل نوزل شفٹ کلوزنگ لاگ' : 'Retail Dispenser Shift Closing Log'}</span>
                 </span>
-                <span className="text-xs font-mono text-slate-500">
-                  {sales.length} Shifts Recorded
+                <span className="text-xs font-mono text-slate-500" dir="ltr">
+                  {sales.length} {isUrdu ? 'شفٹس' : 'Shifts Recorded'}
                 </span>
               </div>
 
               <div className="overflow-x-auto w-full">
-                <table className="w-full text-left text-xs min-w-[700px]">
+                <table className="w-full text-start text-xs min-w-[700px]">
                   <thead>
-                    <tr className="text-[10px] text-slate-500 uppercase border-b border-slate-200 bg-slate-50 font-mono">
-                      <th className="py-2.5 px-2">Date & Time</th>
-                      <th className="py-2.5 px-2">Nozzle / Fuel</th>
-                      <th className="py-2.5 px-2 text-right">Opening</th>
-                      <th className="py-2.5 px-2 text-right">Closing</th>
-                      <th className="py-2.5 px-2 text-right">Liters Sold</th>
-                      <th className="py-2.5 px-2 text-right">Rate</th>
-                      <th className="py-2.5 px-2 text-right">Realized</th>
-                      <th className="py-2.5 px-2 text-right">Cash</th>
-                      <th className="py-2.5 px-2 text-right">Credit</th>
-                      <th className="py-2.5 px-2 text-center">Action</th>
+                    <tr className="text-[10px] text-slate-500 uppercase border-b border-slate-200 bg-slate-50 font-mono font-urdu">
+                      <th className="py-2.5 px-2 text-start">{isUrdu ? 'تاریخ و وقت' : 'Date & Time'}</th>
+                      <th className="py-2.5 px-2 text-start">{isUrdu ? 'نوزل / ایندھن' : 'Nozzle / Fuel'}</th>
+                      <th className="py-2.5 px-2 text-end">{isUrdu ? 'ابتدائی' : 'Opening'}</th>
+                      <th className="py-2.5 px-2 text-end">{isUrdu ? 'اختتامی' : 'Closing'}</th>
+                      <th className="py-2.5 px-2 text-end">{isUrdu ? 'لیٹرز' : 'Liters Sold'}</th>
+                      <th className="py-2.5 px-2 text-end">{isUrdu ? 'ریٹ' : 'Rate'}</th>
+                      <th className="py-2.5 px-2 text-end">{isUrdu ? 'کل رقم' : 'Realized'}</th>
+                      <th className="py-2.5 px-2 text-end">{isUrdu ? 'نقد' : 'Cash'}</th>
+                      <th className="py-2.5 px-2 text-end">{isUrdu ? 'ادھار' : 'Credit'}</th>
+                      <th className="py-2.5 px-2 text-center">{isUrdu ? 'کارروائی' : 'Action'}</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100 font-mono">
                     {sales.map(s => (
                       <tr key={s.id} className="hover:bg-slate-50">
-                        <td className="py-2.5 px-2 text-slate-500 text-[11px] whitespace-nowrap">{formatDateTime(s.date)}</td>
-                        <td className="py-2.5 px-2 whitespace-nowrap">
+                        <td className="py-2.5 px-2 text-slate-500 text-[11px] whitespace-nowrap text-start">{formatDateTime(s.date)}</td>
+                        <td className="py-2.5 px-2 whitespace-nowrap text-start">
                           <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
                             s.fuelType === 'petrol' ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' : 'bg-amber-50 text-amber-800 border border-amber-200'
                           }`}>
                             {s.fuelType.toUpperCase()}
                           </span>
                         </td>
-                        <td className="py-2.5 px-2 text-right text-slate-600 whitespace-nowrap">{Number(s.openingMeter).toFixed(1)}</td>
-                        <td className="py-2.5 px-2 text-right text-slate-800 whitespace-nowrap">{Number(s.closingMeter).toFixed(1)}</td>
-                        <td className="py-2.5 px-2 text-right font-bold text-slate-900 whitespace-nowrap">{formatLitres(s.litresSold)}</td>
-                        <td className="py-2.5 px-2 text-right text-slate-600 whitespace-nowrap">{s.rate}</td>
-                        <td className="py-2.5 px-2 text-right font-bold text-emerald-700 whitespace-nowrap">{formatPKR(s.totalSaleValue)}</td>
-                        <td className="py-2.5 px-2 text-right text-slate-700 whitespace-nowrap">{formatPKR(s.cashReceived)}</td>
-                        <td className="py-2.5 px-2 text-right text-sky-700 whitespace-nowrap">{formatPKR(s.creditIssued)}</td>
+                        <td className="py-2.5 px-2 text-end text-slate-600 whitespace-nowrap" dir="ltr">{Number(s.openingMeter).toFixed(1)}</td>
+                        <td className="py-2.5 px-2 text-end text-slate-800 whitespace-nowrap" dir="ltr">{Number(s.closingMeter).toFixed(1)}</td>
+                        <td className="py-2.5 px-2 text-end font-bold text-slate-900 whitespace-nowrap" dir="ltr">{formatLitres(s.litresSold)}</td>
+                        <td className="py-2.5 px-2 text-end text-slate-600 whitespace-nowrap" dir="ltr">{s.rate}</td>
+                        <td className="py-2.5 px-2 text-end font-bold text-emerald-700 whitespace-nowrap" dir="ltr">{formatPKR(s.totalSaleValue)}</td>
+                        <td className="py-2.5 px-2 text-end text-slate-700 whitespace-nowrap" dir="ltr">{formatPKR(s.cashReceived)}</td>
+                        <td className="py-2.5 px-2 text-end text-sky-700 whitespace-nowrap" dir="ltr">{formatPKR(s.creditIssued)}</td>
                         <td className="py-2.5 px-2 text-center whitespace-nowrap">
                           <div className="flex items-center justify-center gap-1.5">
                             <button
@@ -708,29 +725,29 @@ export const SaleShiftView = () => {
         <div className="space-y-4 animate-in fade-in duration-200">
           
           {/* Sub-view switcher: Dump Fuel vs Bulk Dumping Log */}
-          <div className="flex items-center justify-between px-1">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-1">
             <span className="text-xs font-bold text-slate-500 font-urdu">
               {isUrdu ? 'دیگر گاڑیوں، ٹرکوں اور ڈمپرز میں براہ راست بلک تیل کا اخراج' : 'Bulk issue / dumping into customer vehicles from storage tank'}
             </span>
 
-            <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs font-bold">
+            <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs font-bold self-start sm:self-auto">
               <button
                 type="button"
                 onClick={() => setBulkSubView('dump')}
-                className={`px-3 py-1.5 rounded-lg transition-all ${
+                className={`px-3 py-1.5 rounded-lg transition-all font-urdu ${
                   bulkSubView === 'dump' ? 'bg-white text-amber-800 font-bold shadow-sm' : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
-                + Issue Bulk Dumping
+                {isUrdu ? '+ نئی بلک ڈمپنگ درج کریں' : '+ Issue Bulk Dumping'}
               </button>
               <button
                 type="button"
                 onClick={() => setBulkSubView('history')}
-                className={`px-3 py-1.5 rounded-lg transition-all ${
+                className={`px-3 py-1.5 rounded-lg transition-all font-urdu ${
                   bulkSubView === 'history' ? 'bg-white text-amber-800 font-bold shadow-sm' : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
-                Bulk Logs ({bulkSales.length})
+                {isUrdu ? `بلک لاگز (${bulkSales.length})` : `Bulk Logs (${bulkSales.length})`}
               </button>
             </div>
           </div>
@@ -740,13 +757,13 @@ export const SaleShiftView = () => {
               
               <div className="p-4 md:p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-4">
                 
-                <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
+                <div className="flex items-center justify-between border-b border-slate-100 pb-2.5 flex-wrap gap-2">
                   <span className="text-xs font-bold uppercase text-amber-800 flex items-center gap-2 font-urdu">
-                    <Truck className="w-4 h-4 text-amber-600" />
+                    <Truck className="w-4 h-4 text-amber-600 flex-shrink-0" />
                     <span>{isUrdu ? 'گاڑی میں بلک ایندھن کا اخراج (ڈمپنگ)' : 'Bulk Vehicle Issue Details'}</span>
                   </span>
-                  <span className="text-[11px] font-mono text-slate-500">
-                    Storage Stock: {formatLitres(currentTankStockBulk)}
+                  <span className="text-[11px] font-mono text-slate-500" dir="ltr">
+                    {isUrdu ? 'دستیاب اسٹوریج: ' : 'Storage Stock: '}{formatLitres(currentTankStockBulk)}
                   </span>
                 </div>
 
@@ -761,14 +778,14 @@ export const SaleShiftView = () => {
                         key={c.id}
                         type="button"
                         onClick={() => handleSelectCustomerForBulk(c)}
-                        className={`flex-shrink-0 px-2.5 py-1 rounded-xl border text-left text-xs transition-all ${
+                        className={`flex-shrink-0 px-2.5 py-1 rounded-xl border text-start text-xs transition-all ${
                           selectedCustomerId === c.id
-                            ? 'bg-amber-100 border-amber-500 text-amber-900'
+                            ? 'bg-amber-100 border-amber-500 text-amber-900 ring-1 ring-amber-500 shadow-xs'
                             : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'
                         }`}
                       >
                         <span className="font-bold block truncate max-w-[110px]">{c.name}</span>
-                        <span className="text-[10px] font-mono text-amber-700">{c.vehicleNo}</span>
+                        <span className="text-[10px] font-mono text-amber-700" dir="ltr">{c.vehicleNo}</span>
                       </button>
                     ))}
                   </div>
@@ -779,39 +796,42 @@ export const SaleShiftView = () => {
                   
                   {/* Fuel Type Toggle */}
                   <div>
-                    <label className="text-[11px] font-bold text-slate-700 block mb-1">Fuel Type</label>
+                    <label className="text-[11px] font-bold text-slate-700 block mb-1 font-urdu">
+                      {isUrdu ? 'تیل کی قسم:' : 'Fuel Type:'}
+                    </label>
                     <div className="grid grid-cols-2 gap-1 p-1 bg-slate-100 border border-slate-200 rounded-xl">
                       <button
                         type="button"
                         onClick={() => handleBulkFuelToggle('diesel')}
-                        className={`py-1.5 text-xs font-bold rounded-lg transition-all ${
+                        className={`py-1.5 text-xs font-bold rounded-lg transition-all font-urdu ${
                           bulkFuelType === 'diesel' ? 'bg-amber-600 text-white shadow-sm font-bold' : 'text-slate-600 hover:text-slate-900'
                         }`}
                       >
-                        Diesel (HSD)
+                        {isUrdu ? 'ڈیزل' : 'Diesel (HSD)'}
                       </button>
                       <button
                         type="button"
                         onClick={() => handleBulkFuelToggle('petrol')}
-                        className={`py-1.5 text-xs font-bold rounded-lg transition-all ${
+                        className={`py-1.5 text-xs font-bold rounded-lg transition-all font-urdu ${
                           bulkFuelType === 'petrol' ? 'bg-emerald-700 text-white shadow-sm font-bold' : 'text-slate-600 hover:text-slate-900'
                         }`}
                       >
-                        Petrol
+                        {isUrdu ? 'پٹرول' : 'Petrol'}
                       </button>
                     </div>
                   </div>
 
                   {/* Target Vehicle Number */}
                   <div>
-                    <label className="text-[11px] font-bold text-amber-800 block mb-1">
-                      Target Vehicle Number *
+                    <label className="text-[11px] font-bold text-amber-800 block mb-1 font-urdu">
+                      {isUrdu ? 'گاڑی کا نمبر *' : 'Target Vehicle Number *'}
                     </label>
                     <input
                       type="text"
-                      placeholder="e.g. TLA-786 / KHI-9921"
+                      placeholder={isUrdu ? 'مثال: TLA-786 / KHI-9921' : 'e.g. TLA-786 / KHI-9921'}
                       value={bulkVehicleNo}
                       onChange={(e) => setBulkVehicleNo(e.target.value.toUpperCase())}
+                      dir="ltr"
                       className="w-full bg-slate-50 border border-amber-300 rounded-xl px-3 py-2 text-xs font-mono font-bold text-slate-900 focus:bg-white focus:outline-none focus:ring-1 focus:ring-amber-500 uppercase placeholder:text-slate-400"
                       required
                     />
@@ -819,15 +839,15 @@ export const SaleShiftView = () => {
 
                   {/* Customer / Transporter Name */}
                   <div>
-                    <label className="text-[11px] font-bold text-slate-700 block mb-1">
-                      Customer / Fleet Name
+                    <label className="text-[11px] font-bold text-slate-700 block mb-1 font-urdu">
+                      {isUrdu ? 'گاہک / ٹرانسپورٹر کا نام' : 'Customer / Fleet Name'}
                     </label>
                     <input
                       type="text"
-                      placeholder="e.g. Zehri Goods Transport"
+                      placeholder={isUrdu ? 'مثال: زہری گڈز ٹرانسپورٹ' : 'e.g. Zehri Goods Transport'}
                       value={bulkCustomerName}
                       onChange={(e) => setBulkCustomerName(e.target.value)}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900 focus:bg-white focus:outline-none focus:border-amber-500"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900 focus:bg-white focus:outline-none focus:border-amber-500 font-urdu"
                     />
                   </div>
 
@@ -846,16 +866,17 @@ export const SaleShiftView = () => {
                         placeholder="e.g. 500"
                         value={bulkLitres}
                         onChange={(e) => setBulkLitres(e.target.value)}
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-3 pr-10 py-2 text-sm font-mono font-black text-amber-800 focus:bg-white focus:outline-none focus:border-amber-500"
+                        dir="ltr"
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl ps-3 pe-10 py-2 text-sm font-mono font-black text-amber-800 focus:bg-white focus:outline-none focus:border-amber-500"
                         required
                       />
-                      <span className="absolute right-3 top-2 text-xs text-slate-500 font-bold">L</span>
+                      <span className="absolute end-3 top-1/2 -translate-y-1/2 text-xs text-slate-500 font-bold pointer-events-none">L</span>
                     </div>
                   </div>
 
                   <div>
-                    <label className="text-[11px] font-bold text-slate-700 block mb-1">
-                      Selling Rate per Litre
+                    <label className="text-[11px] font-bold text-slate-700 block mb-1 font-urdu">
+                      {isUrdu ? 'فروخت ریٹ فی لیٹر' : 'Selling Rate per Litre'}
                     </label>
                     <div className="relative">
                       <input
@@ -863,18 +884,19 @@ export const SaleShiftView = () => {
                         step="0.1"
                         value={bulkRate}
                         onChange={(e) => setBulkRate(e.target.value)}
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-3 pr-12 py-2 text-sm font-mono font-bold text-slate-900 focus:bg-white focus:outline-none focus:border-amber-500"
+                        dir="ltr"
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl ps-3 pe-12 py-2 text-sm font-mono font-bold text-slate-900 focus:bg-white focus:outline-none focus:border-amber-500"
                         required
                       />
-                      <span className="absolute right-2.5 top-2 text-xs text-slate-500 font-bold">PKR</span>
+                      <span className="absolute end-2.5 top-1/2 -translate-y-1/2 text-xs text-slate-500 font-bold pointer-events-none">PKR</span>
                     </div>
                   </div>
 
                   <div>
-                    <label className="text-[11px] font-bold text-slate-500 block mb-1">
-                      Calculated Total Bill
+                    <label className="text-[11px] font-bold text-slate-500 block mb-1 font-urdu">
+                      {isUrdu ? 'کل بل رقم' : 'Calculated Total Bill'}
                     </label>
-                    <div className="w-full bg-emerald-50/70 border border-emerald-200 rounded-xl px-3 py-2 text-sm font-mono font-black text-emerald-800">
+                    <div className="w-full bg-emerald-50/70 border border-emerald-200 rounded-xl px-3 py-2 text-sm font-mono font-black text-emerald-800" dir="ltr">
                       {formatPKR(bTotalAmount)}
                     </div>
                   </div>
@@ -889,27 +911,35 @@ export const SaleShiftView = () => {
                     <button
                       type="button"
                       onClick={() => setBulkPaymentType('cash')}
-                      className={`p-3 rounded-xl border text-left transition-all ${
+                      className={`p-3 rounded-xl border text-start transition-all ${
                         bulkPaymentType === 'cash'
-                          ? 'bg-emerald-50 border-emerald-600 text-emerald-900 ring-1 ring-emerald-600'
+                          ? 'bg-emerald-50 border-emerald-600 text-emerald-900 ring-1 ring-emerald-600 shadow-xs'
                           : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
                       }`}
                     >
-                      <span className="font-bold text-xs block">Cash Paid (نقد ادائیگی)</span>
-                      <span className="text-[10px] text-slate-500">Collected in hand now</span>
+                      <span className="font-bold text-xs block font-urdu">
+                        {isUrdu ? 'نقد ادائیگی (Cash)' : 'Cash Paid (نقد ادائیگی)'}
+                      </span>
+                      <span className="text-[10px] text-slate-500 font-urdu">
+                        {isUrdu ? 'موقع پر فوری نقد وصول' : 'Collected in hand now'}
+                      </span>
                     </button>
 
                     <button
                       type="button"
                       onClick={() => setBulkPaymentType('khata')}
-                      className={`p-3 rounded-xl border text-left transition-all ${
+                      className={`p-3 rounded-xl border text-start transition-all ${
                         bulkPaymentType === 'khata'
-                          ? 'bg-sky-50 border-sky-600 text-sky-900 ring-1 ring-sky-600'
+                          ? 'bg-sky-50 border-sky-600 text-sky-900 ring-1 ring-sky-600 shadow-xs'
                           : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
                       }`}
                     >
-                      <span className="font-bold text-xs block">Khata / Credit (ادھار کھاتہ)</span>
-                      <span className="text-[10px] text-slate-500">Adds to customer balance</span>
+                      <span className="font-bold text-xs block font-urdu">
+                        {isUrdu ? 'ادھار کھاتہ (Khata / Credit)' : 'Khata / Credit (ادھار کھاتہ)'}
+                      </span>
+                      <span className="text-[10px] text-slate-500 font-urdu">
+                        {isUrdu ? 'گاہک کے کھاتے میں اضافہ' : 'Adds to customer balance'}
+                      </span>
                     </button>
                   </div>
                 </div>
@@ -918,22 +948,23 @@ export const SaleShiftView = () => {
                 {bulkPaymentType === 'khata' && (
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 rounded-xl bg-sky-50/70 border border-sky-200">
                     <div>
-                      <label className="text-[10px] font-bold text-slate-600 uppercase block mb-1">
-                        Partial Cash Received (If Any)
+                      <label className="text-[10px] font-bold text-slate-600 uppercase block mb-1 font-urdu">
+                        {isUrdu ? 'جزوی نقد وصولی (اگر کوئی ہے)' : 'Partial Cash Received (If Any)'}
                       </label>
                       <input
                         type="number"
                         placeholder="0.00"
                         value={bulkPaidAmount}
                         onChange={(e) => setBulkPaidAmount(e.target.value)}
+                        dir="ltr"
                         className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs font-mono font-bold text-slate-900 focus:outline-none focus:border-emerald-600"
                       />
                     </div>
                     <div>
-                      <label className="text-[10px] font-bold text-sky-800 uppercase block mb-1">
-                        Added to Customer Khata
+                      <label className="text-[10px] font-bold text-sky-800 uppercase block mb-1 font-urdu">
+                        {isUrdu ? 'کھاتے میں شامل رقم' : 'Added to Customer Khata'}
                       </label>
-                      <div className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs font-mono font-black text-sky-700">
+                      <div className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs font-mono font-black text-sky-700" dir="ltr">
                         {formatPKR(bKhata)}
                       </div>
                     </div>
@@ -943,23 +974,27 @@ export const SaleShiftView = () => {
                 {/* Notes & Operator */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="text-[11px] font-bold text-slate-600 block mb-1">Notes / Driver Details</label>
+                    <label className="text-[11px] font-bold text-slate-600 block mb-1 font-urdu">
+                      {isUrdu ? 'ڈرائیور تفصیل / نوٹس' : 'Notes / Driver Details'}
+                    </label>
                     <input
                       type="text"
-                      placeholder="e.g. Bulk issue for highway long-haul truck"
+                      placeholder={isUrdu ? 'مثال: ہائی وے لانگ روٹ ٹرک کیلئے بلک تیل' : 'e.g. Bulk issue for highway long-haul truck'}
                       value={bulkNotes}
                       onChange={(e) => setBulkNotes(e.target.value)}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:bg-white focus:outline-none focus:border-amber-500"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:bg-white focus:outline-none focus:border-amber-500 font-urdu"
                     />
                   </div>
 
                   <div>
-                    <label className="text-[11px] font-bold text-slate-600 block mb-1">Dispatcher Operator</label>
+                    <label className="text-[11px] font-bold text-slate-600 block mb-1 font-urdu">
+                      {isUrdu ? 'ڈسپیچر آپریٹر' : 'Dispatcher Operator'}
+                    </label>
                     <input
                       type="text"
                       value={operatorName}
                       onChange={(e) => setOperatorName(e.target.value)}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:bg-white focus:outline-none focus:border-amber-500"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:bg-white focus:outline-none focus:border-amber-500 font-urdu"
                     />
                   </div>
                 </div>
@@ -967,10 +1002,10 @@ export const SaleShiftView = () => {
                 {/* Submit Bulk Dumping */}
                 <button
                   type="submit"
-                  className="w-full py-3.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs tracking-wider uppercase transition-all shadow-sm active:scale-95 flex items-center justify-center gap-2"
+                  className="w-full py-3.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs tracking-wider uppercase transition-all shadow-sm active:scale-95 flex items-center justify-center gap-2 font-urdu"
                 >
-                  <CheckCircle2 className="w-4 h-4" />
-                  <span>Confirm Bulk Dumping & Generate Receipt</span>
+                  <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
+                  <span>{isUrdu ? 'بلک ڈمپنگ محفوظ کریں اور رسید بنائیں' : 'Confirm Bulk Dumping & Generate Receipt'}</span>
                 </button>
 
               </div>
@@ -981,45 +1016,45 @@ export const SaleShiftView = () => {
             <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-3">
               <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                 <span className="text-xs font-bold uppercase text-amber-800 flex items-center gap-1.5 font-urdu">
-                  <Truck className="w-4 h-4 text-amber-600" />
+                  <Truck className="w-4 h-4 text-amber-600 flex-shrink-0" />
                   <span>{isUrdu ? 'گاڑیوں میں بلک ڈمپنگ کا لاگ' : 'Vehicle Bulk Dumping Log'}</span>
                 </span>
-                <span className="text-xs font-mono text-slate-500">
-                  {bulkSales.length} Entries
+                <span className="text-xs font-mono text-slate-500" dir="ltr">
+                  {bulkSales.length} {isUrdu ? 'ریکارڈز' : 'Entries'}
                 </span>
               </div>
 
               <div className="overflow-x-auto w-full">
-                <table className="w-full text-left text-xs min-w-[700px]">
+                <table className="w-full text-start text-xs min-w-[700px]">
                   <thead>
-                    <tr className="text-[10px] text-slate-500 uppercase border-b border-slate-200 bg-slate-50 font-mono">
-                      <th className="py-2.5 px-2">Date & Time</th>
-                      <th className="py-2.5 px-2">Target Vehicle</th>
-                      <th className="py-2.5 px-2">Customer Name</th>
-                      <th className="py-2.5 px-2">Fuel</th>
-                      <th className="py-2.5 px-2 text-right">Liters Dumped</th>
-                      <th className="py-2.5 px-2 text-right">Rate</th>
-                      <th className="py-2.5 px-2 text-right">Total Amount</th>
-                      <th className="py-2.5 px-2 text-center">Payment</th>
-                      <th className="py-2.5 px-2 text-center">Actions</th>
+                    <tr className="text-[10px] text-slate-500 uppercase border-b border-slate-200 bg-slate-50 font-mono font-urdu">
+                      <th className="py-2.5 px-2 text-start">{isUrdu ? 'تاریخ و وقت' : 'Date & Time'}</th>
+                      <th className="py-2.5 px-2 text-start">{isUrdu ? 'گاڑی نمبر' : 'Target Vehicle'}</th>
+                      <th className="py-2.5 px-2 text-start">{isUrdu ? 'گاہک کا نام' : 'Customer Name'}</th>
+                      <th className="py-2.5 px-2 text-start">{isUrdu ? 'ایندھن' : 'Fuel'}</th>
+                      <th className="py-2.5 px-2 text-end">{isUrdu ? 'لیٹرز' : 'Liters Dumped'}</th>
+                      <th className="py-2.5 px-2 text-end">{isUrdu ? 'ریٹ' : 'Rate'}</th>
+                      <th className="py-2.5 px-2 text-end">{isUrdu ? 'کل رقم' : 'Total Amount'}</th>
+                      <th className="py-2.5 px-2 text-center">{isUrdu ? 'ادائیگی' : 'Payment'}</th>
+                      <th className="py-2.5 px-2 text-center">{isUrdu ? 'کارروائی' : 'Actions'}</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100 font-mono">
                     {bulkSales.map(b => (
                       <tr key={b.id} className="hover:bg-slate-50">
-                        <td className="py-2.5 px-2 text-slate-500 text-[11px] whitespace-nowrap">{formatDateTime(b.date)}</td>
-                        <td className="py-2.5 px-2 font-bold text-amber-800 whitespace-nowrap">{b.vehicleNo}</td>
-                        <td className="py-2.5 px-2 text-slate-700 font-sans text-[11px] truncate max-w-[120px]">{b.customerName}</td>
-                        <td className="py-2.5 px-2 whitespace-nowrap">
+                        <td className="py-2.5 px-2 text-slate-500 text-[11px] whitespace-nowrap text-start">{formatDateTime(b.date)}</td>
+                        <td className="py-2.5 px-2 font-bold text-amber-800 whitespace-nowrap text-start" dir="ltr">{b.vehicleNo}</td>
+                        <td className="py-2.5 px-2 text-slate-700 font-sans text-[11px] truncate max-w-[120px] text-start">{b.customerName}</td>
+                        <td className="py-2.5 px-2 whitespace-nowrap text-start">
                           <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
                             b.fuelType === 'petrol' ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' : 'bg-amber-50 text-amber-800 border border-amber-200'
                           }`}>
                             {b.fuelType.toUpperCase()}
                           </span>
                         </td>
-                        <td className="py-2.5 px-2 text-right font-bold text-slate-900 whitespace-nowrap">{formatLitres(b.litres)}</td>
-                        <td className="py-2.5 px-2 text-right text-slate-600 whitespace-nowrap">{b.rate}</td>
-                        <td className="py-2.5 px-2 text-right font-bold text-emerald-700 whitespace-nowrap">{formatPKR(b.totalAmount)}</td>
+                        <td className="py-2.5 px-2 text-end font-bold text-slate-900 whitespace-nowrap" dir="ltr">{formatLitres(b.litres)}</td>
+                        <td className="py-2.5 px-2 text-end text-slate-600 whitespace-nowrap" dir="ltr">{b.rate}</td>
+                        <td className="py-2.5 px-2 text-end font-bold text-emerald-700 whitespace-nowrap" dir="ltr">{formatPKR(b.totalAmount)}</td>
                         <td className="py-2.5 px-2 text-center whitespace-nowrap">
                           <span className={`px-2 py-0.5 rounded text-[9px] font-bold ${
                             b.paymentType === 'cash' ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' : 'bg-sky-50 text-sky-800 border border-sky-200'

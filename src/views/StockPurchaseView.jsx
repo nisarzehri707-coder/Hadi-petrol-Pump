@@ -200,41 +200,41 @@ export const StockPurchaseView = () => {
         </div>
 
         {/* Quick Active Loads Counter */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-shrink-0">
           <span className="px-2.5 py-1 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold font-mono">
-            {activeLoads.length} Active Loads
+            {activeLoads.length} {isUrdu ? 'فعال لوڈز' : 'Active Loads'}
           </span>
           <span className="px-2.5 py-1 rounded-xl bg-slate-100 border border-slate-200 text-slate-600 text-xs font-bold font-mono">
-            {closedLoads.length} Closed
+            {closedLoads.length} {isUrdu ? 'بند / مکمل' : 'Closed'}
           </span>
         </div>
       </div>
 
       {/* Sub-Navigation Tabs */}
-      <div className="grid grid-cols-2 p-1.5 bg-slate-100 border border-slate-200 rounded-2xl text-xs font-bold gap-1 shadow-sm">
+      <div className="grid grid-cols-2 p-1.5 bg-slate-100 border border-slate-200 rounded-2xl text-xs font-bold gap-1.5 shadow-sm">
         <button
           type="button"
           onClick={() => setActiveTabSub('new_load')}
-          className={`py-2.5 rounded-xl transition-all flex items-center justify-center gap-2 ${
+          className={`py-2.5 rounded-xl transition-all flex items-center justify-center gap-2 font-urdu ${
             activeTabSub === 'new_load'
               ? 'bg-emerald-700 text-white font-bold shadow-sm'
               : 'text-slate-600 hover:text-slate-900'
           }`}
         >
-          <Plus className="w-4 h-4" />
+          <Plus className="w-4 h-4 flex-shrink-0" />
           <span>{isUrdu ? '+ نیا لوڈ / ٹرپ درج کریں' : '+ Add New Load (Trip)'}</span>
         </button>
 
         <button
           type="button"
           onClick={() => setActiveTabSub('load_audit')}
-          className={`py-2.5 rounded-xl transition-all flex items-center justify-center gap-2 ${
+          className={`py-2.5 rounded-xl transition-all flex items-center justify-center gap-2 font-urdu ${
             activeTabSub === 'load_audit'
               ? 'bg-emerald-700 text-white font-bold shadow-sm'
               : 'text-slate-600 hover:text-slate-900'
           }`}
         >
-          <History className="w-4 h-4" />
+          <History className="w-4 h-4 flex-shrink-0" />
           <span>{isUrdu ? `لوڈز آڈٹ و ہسٹری (${loads.length})` : `Load Audit & History (${loads.length})`}</span>
         </button>
       </div>
@@ -246,13 +246,13 @@ export const StockPurchaseView = () => {
           {/* Card 1: Incoming Vehicle & Fuel Specs */}
           <div className="p-4 md:p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-4">
             
-            <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-900 flex items-center gap-2">
-                <Truck className="w-4 h-4 text-emerald-700" />
-                <span>1. Incoming Vehicle & Batch Trip Information</span>
+            <div className="flex items-center justify-between border-b border-slate-100 pb-2.5 flex-wrap gap-2">
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-900 flex items-center gap-2 font-urdu">
+                <Truck className="w-4 h-4 text-emerald-700 flex-shrink-0" />
+                <span>{isUrdu ? '۱. گاڑی اور بیچ ٹرپ کی تفصیلات' : '1. Incoming Vehicle & Batch Trip Information'}</span>
               </span>
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 font-mono font-bold border border-slate-200">
-                Auto Batch No: {generateLoadId ? generateLoadId(loads) : `LOAD-${new Date().getFullYear()}-${String(loads.length + 1).padStart(3, '0')}`}
+              <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 font-mono font-bold border border-slate-200" dir="ltr">
+                {isUrdu ? 'بیچ نمبر:' : 'Auto Batch No:'} {generateLoadId ? generateLoadId(loads) : `LOAD-${new Date().getFullYear()}-${String(loads.length + 1).padStart(3, '0')}`}
               </span>
             </div>
 
@@ -261,11 +261,11 @@ export const StockPurchaseView = () => {
               <label className="text-[11px] font-bold text-slate-700 block mb-2 font-urdu">
                 {isUrdu ? 'آنے والی چھوٹی گاڑی کی قسم:' : 'Incoming Vehicle Type:'}
               </label>
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                 {[
-                  { id: 'Probox', name: 'Probox', desc: 'Max ~2,000 Litres' },
-                  { id: 'Zamyad', name: 'Zamyad', desc: 'Typical ~2,200 Litres' },
-                  { id: 'Other', name: 'Other Vehicle', desc: 'Custom Small Tank' },
+                  { id: 'Probox', name: 'Probox', desc: isUrdu ? 'زیادہ سے زیادہ ۲۰۰۰ لیٹر' : 'Max ~2,000 Litres' },
+                  { id: 'Zamyad', name: 'Zamyad', desc: isUrdu ? 'تقریباً ۲۲۰۰ لیٹر' : 'Typical ~2,200 Litres' },
+                  { id: 'Other', name: isUrdu ? 'دیگر گاڑی' : 'Other Vehicle', desc: isUrdu ? 'چھوٹی کسٹم گاڑی' : 'Custom Small Tank' },
                 ].map(v => {
                   const isSelected = vehicleType === v.id;
                   return (
@@ -273,7 +273,7 @@ export const StockPurchaseView = () => {
                       key={v.id}
                       type="button"
                       onClick={() => handleVehicleTypeSelect(v.id)}
-                      className={`p-3 rounded-xl border text-left transition-all active:scale-95 ${
+                      className={`p-3 rounded-xl border text-start transition-all active:scale-95 ${
                         isSelected
                           ? 'bg-emerald-50 border-emerald-600 text-emerald-900 ring-1 ring-emerald-600 shadow-sm'
                           : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'
@@ -281,9 +281,9 @@ export const StockPurchaseView = () => {
                     >
                       <div className="flex items-center justify-between">
                         <span className="font-bold text-xs">{v.name}</span>
-                        {isSelected && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" />}
+                        {isSelected && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700 flex-shrink-0" />}
                       </div>
-                      <span className="text-[10px] text-slate-500 mt-1 block truncate">{v.desc}</span>
+                      <span className="text-[10px] text-slate-500 mt-1 block truncate font-urdu">{v.desc}</span>
                     </button>
                   );
                 })}
@@ -295,14 +295,15 @@ export const StockPurchaseView = () => {
               
               {/* Vehicle Number */}
               <div>
-                <label className="text-[11px] font-bold text-slate-700 block mb-1">
-                  Vehicle Number
+                <label className="text-[11px] font-bold text-slate-700 block mb-1 font-urdu">
+                  {isUrdu ? 'گاڑی کا نمبر:' : 'Vehicle Number:'}
                 </label>
                 <input
                   type="text"
-                  placeholder="e.g. KHI-4920 / AFG-786"
+                  placeholder={isUrdu ? 'مثال: KHI-4920' : 'e.g. KHI-4920 / AFG-786'}
                   value={vehicleNo}
                   onChange={(e) => setVehicleNo(e.target.value)}
+                  dir="ltr"
                   className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-mono font-bold text-slate-900 focus:bg-white focus:outline-none focus:border-emerald-600 uppercase placeholder:text-slate-400"
                 />
               </div>
@@ -322,7 +323,7 @@ export const StockPurchaseView = () => {
                         : 'text-slate-600 hover:text-slate-900'
                     }`}
                   >
-                    Diesel (HSD)
+                    {isUrdu ? 'ڈیزل' : 'Diesel (HSD)'}
                   </button>
                   <button
                     type="button"
@@ -333,7 +334,7 @@ export const StockPurchaseView = () => {
                         : 'text-slate-600 hover:text-slate-900'
                     }`}
                   >
-                    Petrol
+                    {isUrdu ? 'پٹرول' : 'Petrol'}
                   </button>
                 </div>
               </div>
@@ -349,10 +350,10 @@ export const StockPurchaseView = () => {
                     step="any"
                     value={litresReceived}
                     onChange={(e) => setLitresReceived(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-3 pr-10 py-2 text-sm font-mono font-black text-slate-900 focus:bg-white focus:outline-none focus:border-emerald-600"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl ps-3 pe-10 py-2 text-sm font-mono font-black text-slate-900 focus:bg-white focus:outline-none focus:border-emerald-600"
                     required
                   />
-                  <span className="absolute right-3 top-2 text-xs text-slate-500 font-bold">L</span>
+                  <span className="absolute end-3 top-1/2 -translate-y-1/2 text-xs text-slate-500 font-bold pointer-events-none">L</span>
                 </div>
               </div>
 
@@ -367,10 +368,10 @@ export const StockPurchaseView = () => {
                     step="0.1"
                     value={purchaseRate}
                     onChange={(e) => setPurchaseRate(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-3 pr-12 py-2 text-sm font-mono font-black text-emerald-700 focus:bg-white focus:outline-none focus:border-emerald-600"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl ps-3 pe-12 py-2 text-sm font-mono font-black text-emerald-700 focus:bg-white focus:outline-none focus:border-emerald-600"
                     required
                   />
-                  <span className="absolute right-2.5 top-2 text-xs text-slate-500 font-bold">PKR</span>
+                  <span className="absolute end-2.5 top-1/2 -translate-y-1/2 text-xs text-slate-500 font-bold pointer-events-none">PKR</span>
                 </div>
               </div>
 
@@ -379,24 +380,24 @@ export const StockPurchaseView = () => {
             {/* Supplier / Driver info */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
               <div>
-                <label className="text-[11px] font-bold text-slate-600 block mb-1">
-                  Distributor / Source Depot
+                <label className="text-[11px] font-bold text-slate-600 block mb-1 font-urdu">
+                  {isUrdu ? 'ڈپو / سپلائر کا نام:' : 'Distributor / Source Depot:'}
                 </label>
                 <input
                   type="text"
-                  placeholder="e.g. Hub Supply Terminal / Quetta Depot"
+                  placeholder={isUrdu ? 'مثال: حب سپلائی ٹرمینل / کوئٹہ ڈپو' : 'e.g. Hub Supply Terminal / Quetta Depot'}
                   value={supplierName}
                   onChange={(e) => setSupplierName(e.target.value)}
                   className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:bg-white focus:outline-none focus:border-emerald-600"
                 />
               </div>
               <div>
-                <label className="text-[11px] font-bold text-slate-600 block mb-1">
-                  Driver Name / Phone
+                <label className="text-[11px] font-bold text-slate-600 block mb-1 font-urdu">
+                  {isUrdu ? 'ڈرائیور کا نام / فون:' : 'Driver Name / Phone:'}
                 </label>
                 <input
                   type="text"
-                  placeholder="Driver Sher Ali (03xx-xxxxxxx)"
+                  placeholder={isUrdu ? 'شیر علی (03xx-xxxxxxx)' : 'Driver Sher Ali (03xx-xxxxxxx)'}
                   value={driverName}
                   onChange={(e) => setDriverName(e.target.value)}
                   className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:bg-white focus:outline-none focus:border-emerald-600"
@@ -408,24 +409,24 @@ export const StockPurchaseView = () => {
 
           {/* Card 2: Attached Load Expenses (Vehicle Rent, Driver, Police, Commission) */}
           <div className="p-4 md:p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-3">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-2.5 flex-wrap gap-2">
               <div>
                 <span className="text-xs font-bold uppercase tracking-wider text-slate-900 flex items-center gap-2 font-urdu">
-                  <DollarSign className="w-4 h-4 text-red-600" />
-                  <span>{isUrdu ? '2. اس لوڈ کے مخصوص اخراجات (گاڑی کرایہ، ڈرائیور، پولیس، کمیشن)' : '2. Load-Specific Direct Expenses'}</span>
+                  <DollarSign className="w-4 h-4 text-red-600 flex-shrink-0" />
+                  <span>{isUrdu ? '۲. اس لوڈ کے مخصوص اخراجات (گاڑی کرایہ، ڈرائیور، پولیس، کمیشن)' : '2. Load-Specific Direct Expenses'}</span>
                 </span>
                 <p className="text-[10px] text-slate-500 font-urdu mt-0.5">
-                  {isUrdu ? 'یہ اخراجات براہ راست اسی لوڈ کے کھاتے اور آڈٹ میں بند ہوں گے' : 'These expenses are permanently attached to this specific load'}
+                  {isUrdu ? 'یہ اخراجات براہ راست اسی لوڈ کے کھاتے اور آڈٹ میں شامل ہوں گے' : 'These expenses are permanently attached to this specific load'}
                 </p>
               </div>
 
               <button
                 type="button"
                 onClick={handleAddExpenseRow}
-                className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-bold border border-slate-200 transition-all active:scale-95"
+                className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-bold border border-slate-200 transition-all active:scale-95 font-urdu"
               >
-                <Plus className="w-3.5 h-3.5 text-emerald-700" />
-                <span>Add Row</span>
+                <Plus className="w-3.5 h-3.5 text-emerald-700 flex-shrink-0" />
+                <span>{isUrdu ? '+ خرچہ شامل کریں' : '+ Add Row'}</span>
               </button>
             </div>
 
@@ -435,27 +436,27 @@ export const StockPurchaseView = () => {
                 <div key={idx} className="grid grid-cols-1 sm:grid-cols-12 gap-2 p-2.5 rounded-xl bg-slate-50 border border-slate-200 items-center">
                   {/* Category Picker */}
                   <div className="sm:col-span-4">
-                    <label className="text-[9px] font-bold text-slate-500 uppercase block mb-0.5">Category</label>
+                    <label className="text-[9px] font-bold text-slate-500 uppercase block mb-0.5 font-urdu">{isUrdu ? 'قسم' : 'Category'}</label>
                     <select
                       value={exp.category}
                       onChange={(e) => handleUpdateExpenseRow(idx, 'category', e.target.value)}
                       className="w-full bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-xs text-slate-800 focus:outline-none focus:border-emerald-600 font-bold"
                     >
-                      <option value="Vehicle Rent">Vehicle Rent / Carriage</option>
-                      <option value="Driver Expense">Driver Bhatta / Expense</option>
-                      <option value="Police / Checkpoint">Police / Checkpoint Clearance</option>
-                      <option value="Commission">Commission / Munshiana</option>
-                      <option value="Unloading">Unloading / Helper Labor</option>
-                      <option value="General">Other Trip Expense</option>
+                      <option value="Vehicle Rent">{isUrdu ? 'گاڑی کرایہ / فریٹ' : 'Vehicle Rent / Carriage'}</option>
+                      <option value="Driver Expense">{isUrdu ? 'ڈرائیور بھتہ / خرچہ' : 'Driver Bhatta / Expense'}</option>
+                      <option value="Police / Checkpoint">{isUrdu ? 'پولیس / چوکی کلیئرنس' : 'Police / Checkpoint Clearance'}</option>
+                      <option value="Commission">{isUrdu ? 'منشیانہ / کمیشن' : 'Commission / Munshiana'}</option>
+                      <option value="Unloading">{isUrdu ? 'ان لوڈنگ / لیبر مزدوری' : 'Unloading / Helper Labor'}</option>
+                      <option value="General">{isUrdu ? 'دیگر ٹرپ اخراجات' : 'Other Trip Expense'}</option>
                     </select>
                   </div>
 
                   {/* Title / Description */}
                   <div className="sm:col-span-4">
-                    <label className="text-[9px] font-bold text-slate-500 uppercase block mb-0.5">Note / Details</label>
+                    <label className="text-[9px] font-bold text-slate-500 uppercase block mb-0.5 font-urdu">{isUrdu ? 'تفصیل / نوٹ' : 'Note / Details'}</label>
                     <input
                       type="text"
-                      placeholder="e.g. Highway checkpoint clearance"
+                      placeholder={isUrdu ? 'مثال: ہائی وے چوکی' : 'e.g. Highway checkpoint clearance'}
                       value={exp.notes}
                       onChange={(e) => handleUpdateExpenseRow(idx, 'notes', e.target.value)}
                       className="w-full bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:border-emerald-600"
@@ -464,14 +465,17 @@ export const StockPurchaseView = () => {
 
                   {/* Amount */}
                   <div className="sm:col-span-3">
-                    <label className="text-[9px] font-bold text-slate-500 uppercase block mb-0.5">Amount (PKR)</label>
-                    <input
-                      type="number"
-                      placeholder="Amount"
-                      value={exp.amount}
-                      onChange={(e) => handleUpdateExpenseRow(idx, 'amount', e.target.value)}
-                      className="w-full bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs font-mono font-bold text-red-600 focus:outline-none focus:border-red-500 text-right"
-                    />
+                    <label className="text-[9px] font-bold text-slate-500 uppercase block mb-0.5 font-urdu">{isUrdu ? 'رقم (روپے)' : 'Amount (PKR)'}</label>
+                    <div className="relative">
+                      <input
+                        type="number"
+                        placeholder="0.00"
+                        value={exp.amount}
+                        onChange={(e) => handleUpdateExpenseRow(idx, 'amount', e.target.value)}
+                        className="w-full bg-white border border-slate-200 rounded-lg ps-2.5 pe-10 py-1.5 text-xs font-mono font-bold text-red-600 focus:outline-none focus:border-red-500"
+                      />
+                      <span className="absolute end-2 top-1/2 -translate-y-1/2 text-[10px] text-slate-400 font-bold pointer-events-none">PKR</span>
+                    </div>
                   </div>
 
                   {/* Remove Button */}
@@ -479,7 +483,8 @@ export const StockPurchaseView = () => {
                     <button
                       type="button"
                       onClick={() => handleRemoveExpenseRow(idx)}
-                      className="p-1 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50"
+                      className="p-1.5 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition-all"
+                      title={isUrdu ? 'حذف کریں' : 'Remove row'}
                     >
                       <X className="w-4 h-4" />
                     </button>
@@ -493,7 +498,7 @@ export const StockPurchaseView = () => {
               <span className="text-xs font-bold text-slate-600 font-urdu">
                 {isUrdu ? 'اس لوڈ کے کل اخراجات:' : 'Total Attached Load Expenses:'}
               </span>
-              <span className="text-sm font-black font-mono text-red-600">
+              <span className="text-sm font-black font-mono text-red-600" dir="ltr">
                 {formatPKR(totalExpensesSum)}
               </span>
             </div>
@@ -505,26 +510,26 @@ export const StockPurchaseView = () => {
             
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
               <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
-                <span className="text-[10px] text-slate-500 uppercase font-bold block">Volume Received</span>
-                <span className="text-sm md:text-base font-black font-mono text-slate-900 mt-1 block">
+                <span className="text-[10px] text-slate-500 uppercase font-bold block font-urdu">{isUrdu ? 'موصول ایندھن' : 'Volume Received'}</span>
+                <span className="text-sm md:text-base font-black font-mono text-slate-900 mt-1 block" dir="ltr">
                   {formatLitres(litres)}
                 </span>
               </div>
               <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
-                <span className="text-[10px] text-slate-500 uppercase font-bold block">Fuel Invoice Cost</span>
-                <span className="text-sm md:text-base font-black font-mono text-slate-800 mt-1 block">
+                <span className="text-[10px] text-slate-500 uppercase font-bold block font-urdu">{isUrdu ? 'ایندھن کی لاگت' : 'Fuel Invoice Cost'}</span>
+                <span className="text-sm md:text-base font-black font-mono text-slate-800 mt-1 block" dir="ltr">
                   {formatPKR(totalCost)}
                 </span>
               </div>
               <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
-                <span className="text-[10px] text-slate-500 uppercase font-bold block">Trip Expenses</span>
-                <span className="text-sm md:text-base font-black font-mono text-red-600 mt-1 block">
+                <span className="text-[10px] text-slate-500 uppercase font-bold block font-urdu">{isUrdu ? 'ٹرپ اخراجات' : 'Trip Expenses'}</span>
+                <span className="text-sm md:text-base font-black font-mono text-red-600 mt-1 block" dir="ltr">
                   {formatPKR(totalExpensesSum)}
                 </span>
               </div>
               <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
-                <span className="text-[10px] text-slate-500 uppercase font-bold block">Net Cost / Litre</span>
-                <span className="text-sm md:text-base font-black font-mono text-emerald-700 mt-1 block">
+                <span className="text-[10px] text-slate-500 uppercase font-bold block font-urdu">{isUrdu ? 'خالص لاگت فی لیٹر' : 'Net Cost / Litre'}</span>
+                <span className="text-sm md:text-base font-black font-mono text-emerald-700 mt-1 block" dir="ltr">
                   {effectiveCostPerLitre.toFixed(2)} PKR
                 </span>
               </div>
@@ -532,10 +537,10 @@ export const StockPurchaseView = () => {
 
             <button
               type="submit"
-              className="w-full py-3.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-sm tracking-wide shadow-sm active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+              className="w-full py-3.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-sm tracking-wide shadow-sm active:scale-[0.98] transition-all flex items-center justify-center gap-2 font-urdu"
             >
-              <CheckCircle2 className="w-5 h-5" />
-              <span>{isUrdu ? 'یہ لوڈ اسٹاک اور ٹینک میں شامل کریں' : `Confirm & Add ${vehicleType} Load to Storage`}</span>
+              <CheckCircle2 className="w-5 h-5 flex-shrink-0" />
+              <span>{isUrdu ? 'یہ لوڈ محفوظ کریں اور اسٹوریج ٹینک میں شامل کریں' : `Confirm & Add ${vehicleType} Load to Storage`}</span>
             </button>
 
           </div>
@@ -551,34 +556,34 @@ export const StockPurchaseView = () => {
           <div className="flex flex-wrap items-center justify-between gap-2 p-3 rounded-2xl bg-white border border-slate-200 shadow-sm">
             
             <div className="flex items-center gap-2">
-              <span className="text-xs font-bold text-slate-600">Fuel:</span>
+              <span className="text-xs font-bold text-slate-600 font-urdu">{isUrdu ? 'تیل:' : 'Fuel:'}</span>
               <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200">
                 {['all', 'diesel', 'petrol'].map(f => (
                   <button
                     key={f}
                     onClick={() => setFilterFuel(f)}
-                    className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${
+                    className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all font-urdu ${
                       filterFuel === f ? 'bg-white text-emerald-800 shadow-sm' : 'text-slate-600 hover:text-slate-900'
                     }`}
                   >
-                    {f === 'all' ? 'All' : f === 'diesel' ? 'Diesel' : 'Petrol'}
+                    {f === 'all' ? (isUrdu ? 'سب' : 'All') : f === 'diesel' ? (isUrdu ? 'ڈیزل' : 'Diesel') : (isUrdu ? 'پٹرول' : 'Petrol')}
                   </button>
                 ))}
               </div>
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="text-xs font-bold text-slate-600">Status:</span>
+              <span className="text-xs font-bold text-slate-600 font-urdu">{isUrdu ? 'حالت:' : 'Status:'}</span>
               <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200">
                 {['all', 'ACTIVE', 'CLOSED'].map(s => (
                   <button
                     key={s}
                     onClick={() => setFilterStatus(s)}
-                    className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${
+                    className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all font-urdu ${
                       filterStatus === s ? 'bg-white text-emerald-800 shadow-sm' : 'text-slate-600 hover:text-slate-900'
                     }`}
                   >
-                    {s === 'all' ? 'All' : s}
+                    {s === 'all' ? (isUrdu ? 'تمام' : 'All') : s === 'ACTIVE' ? (isUrdu ? 'فعال' : 'Active') : (isUrdu ? 'مکمل' : 'Closed')}
                   </button>
                 ))}
               </div>
@@ -804,27 +809,27 @@ export const StockPurchaseView = () => {
 
                 {auditDetails.bulkTransactions.length > 0 ? (
                   <div className="overflow-x-auto">
-                    <table className="w-full text-left text-xs">
+                    <table className="w-full text-start text-xs">
                       <thead>
-                        <tr className="text-[10px] text-slate-500 border-b border-slate-200 uppercase bg-slate-50">
-                          <th className="py-2 px-2">Date & Time</th>
-                          <th className="py-2 px-2">Target Vehicle</th>
-                          <th className="py-2 px-2">Customer</th>
-                          <th className="py-2 px-2 text-right">Liters Dumped</th>
-                          <th className="py-2 px-2 text-right">Rate</th>
-                          <th className="py-2 px-2 text-right">Total Bill</th>
-                          <th className="py-2 px-2 text-center">Status</th>
+                        <tr className="text-[10px] text-slate-500 border-b border-slate-200 uppercase bg-slate-50 font-urdu">
+                          <th className="py-2 px-2 text-start">{isUrdu ? 'تاریخ و وقت' : 'Date & Time'}</th>
+                          <th className="py-2 px-2 text-start">{isUrdu ? 'گاڑی نمبر' : 'Target Vehicle'}</th>
+                          <th className="py-2 px-2 text-start">{isUrdu ? 'گاہک' : 'Customer'}</th>
+                          <th className="py-2 px-2 text-end">{isUrdu ? 'لیٹرز' : 'Liters Dumped'}</th>
+                          <th className="py-2 px-2 text-end">{isUrdu ? 'ریٹ' : 'Rate'}</th>
+                          <th className="py-2 px-2 text-end">{isUrdu ? 'کل رقم' : 'Total Bill'}</th>
+                          <th className="py-2 px-2 text-center">{isUrdu ? 'حالت' : 'Status'}</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-100 font-mono">
                         {auditDetails.bulkTransactions.map(b => (
                           <tr key={b.id} className="hover:bg-slate-50">
-                            <td className="py-2 px-2 text-slate-500 text-[11px] whitespace-nowrap">{formatDateTime(b.date)}</td>
-                            <td className="py-2 px-2 font-bold text-amber-800 whitespace-nowrap">{b.vehicleNo}</td>
-                            <td className="py-2 px-2 text-slate-700 font-sans text-[11px] truncate max-w-[120px]">{b.customerName}</td>
-                            <td className="py-2 px-2 text-right font-bold text-slate-900 whitespace-nowrap">{formatLitres(b.litres)}</td>
-                            <td className="py-2 px-2 text-right text-slate-600 whitespace-nowrap">{b.rate}</td>
-                            <td className="py-2 px-2 text-right font-bold text-emerald-700 whitespace-nowrap">{formatPKR(b.totalAmount)}</td>
+                            <td className="py-2 px-2 text-slate-500 text-[11px] whitespace-nowrap text-start">{formatDateTime(b.date)}</td>
+                            <td className="py-2 px-2 font-bold text-amber-800 whitespace-nowrap text-start" dir="ltr">{b.vehicleNo}</td>
+                            <td className="py-2 px-2 text-slate-700 font-sans text-[11px] truncate max-w-[120px] text-start">{b.customerName}</td>
+                            <td className="py-2 px-2 text-end font-bold text-slate-900 whitespace-nowrap" dir="ltr">{formatLitres(b.litres)}</td>
+                            <td className="py-2 px-2 text-end text-slate-600 whitespace-nowrap" dir="ltr">{b.rate}</td>
+                            <td className="py-2 px-2 text-end font-bold text-emerald-700 whitespace-nowrap" dir="ltr">{formatPKR(b.totalAmount)}</td>
                             <td className="py-2 px-2 text-center whitespace-nowrap">
                               <span className={`px-2 py-0.5 rounded text-[9px] font-bold ${
                                 b.paymentType === 'cash' ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' : 'bg-sky-50 text-sky-800 border border-sky-200'
@@ -848,34 +853,34 @@ export const StockPurchaseView = () => {
               <div className="p-3.5 rounded-2xl bg-white border border-slate-200 space-y-2">
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                   <span className="text-xs font-bold uppercase text-emerald-800 flex items-center gap-1.5 font-urdu">
-                    <Fuel className="w-3.5 h-3.5 text-emerald-600" />
+                    <Fuel className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" />
                     <span>{isUrdu ? 'ریٹیل یونٹ سیل: نوزل میٹر شفٹس' : 'Retail Nozzle Meter Shifts'}</span>
                   </span>
-                  <span className="text-[11px] font-mono text-slate-500">
-                    {auditDetails.retailShifts.length} Shifts
+                  <span className="text-[11px] font-mono text-slate-500" dir="ltr">
+                    {auditDetails.retailShifts.length} {isUrdu ? 'شفٹس' : 'Shifts'}
                   </span>
                 </div>
 
                 {auditDetails.retailShifts.length > 0 ? (
                   <div className="overflow-x-auto">
-                    <table className="w-full text-left text-xs">
+                    <table className="w-full text-start text-xs">
                       <thead>
-                        <tr className="text-[10px] text-slate-500 border-b border-slate-200 uppercase bg-slate-50">
-                          <th className="py-2 px-2">Date & Time</th>
-                          <th className="py-2 px-2">Operator</th>
-                          <th className="py-2 px-2 text-right">Liters Sold</th>
-                          <th className="py-2 px-2 text-right">Selling Rate</th>
-                          <th className="py-2 px-2 text-right">Realized Sales</th>
+                        <tr className="text-[10px] text-slate-500 border-b border-slate-200 uppercase bg-slate-50 font-urdu">
+                          <th className="py-2 px-2 text-start">{isUrdu ? 'تاریخ و وقت' : 'Date & Time'}</th>
+                          <th className="py-2 px-2 text-start">{isUrdu ? 'آپریٹر' : 'Operator'}</th>
+                          <th className="py-2 px-2 text-end">{isUrdu ? 'لیٹرز' : 'Liters Sold'}</th>
+                          <th className="py-2 px-2 text-end">{isUrdu ? 'ریٹ' : 'Selling Rate'}</th>
+                          <th className="py-2 px-2 text-end">{isUrdu ? 'کل رقم' : 'Realized Sales'}</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-100 font-mono">
                         {auditDetails.retailShifts.map(s => (
                           <tr key={s.id} className="hover:bg-slate-50">
-                            <td className="py-2 px-2 text-slate-500 text-[11px] whitespace-nowrap">{formatDateTime(s.date)}</td>
-                            <td className="py-2 px-2 text-slate-700 font-sans text-[11px] whitespace-nowrap">{s.operatorName}</td>
-                            <td className="py-2 px-2 text-right font-bold text-slate-900 whitespace-nowrap">{formatLitres(s.litresSold)}</td>
-                            <td className="py-2 px-2 text-right text-slate-600 whitespace-nowrap">{s.rate}</td>
-                            <td className="py-2 px-2 text-right font-bold text-emerald-700 whitespace-nowrap">{formatPKR(s.totalSaleValue)}</td>
+                            <td className="py-2 px-2 text-slate-500 text-[11px] whitespace-nowrap text-start">{formatDateTime(s.date)}</td>
+                            <td className="py-2 px-2 text-slate-700 font-sans text-[11px] whitespace-nowrap text-start">{s.operatorName}</td>
+                            <td className="py-2 px-2 text-end font-bold text-slate-900 whitespace-nowrap" dir="ltr">{formatLitres(s.litresSold)}</td>
+                            <td className="py-2 px-2 text-end text-slate-600 whitespace-nowrap" dir="ltr">{s.rate}</td>
+                            <td className="py-2 px-2 text-end font-bold text-emerald-700 whitespace-nowrap" dir="ltr">{formatPKR(s.totalSaleValue)}</td>
                           </tr>
                         ))}
                       </tbody>

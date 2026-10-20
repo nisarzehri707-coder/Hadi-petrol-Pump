@@ -16,13 +16,16 @@ import {
   WalletCards,
   Wifi,
 } from 'lucide-react';
-import { formatPKR } from '../utils/formatters';
+import { formatPKR, formatLitres } from '../utils/formatters';
 
 export const Header = () => {
   const { data, isOnline, activeTab, setActiveTab, currentUser, logout, language, toggleLanguage } = useApp();
-  const { station, rates } = data;
+  const { station = {}, rates = {}, tanks = {} } = data || {};
   const isUrdu = language === 'ur';
   const isOwner = currentUser?.role === 'owner';
+
+  const stationName = isUrdu ? (station.nameUrdu || 'ہادی پیٹرولیم سروس') : (station.name || 'HADI PETROL PUMP');
+  const ownerName = isUrdu ? (station.ownerUrdu || 'تنویر زہری') : (station.owner || 'Tanveer Zehri');
 
   const allNavLinks = [
     { id: 'dashboard', labelEn: 'Home',           labelUr: 'ہوم',          icon: LayoutDashboard },
@@ -38,27 +41,27 @@ export const Header = () => {
 
   return (
     <header
-      className="sticky top-0 z-40 px-3 md:px-6 py-2.5 shadow-sm"
+      className="sticky top-0 z-40 px-3 md:px-6 py-2 shadow-sm"
       style={{
         background: 'var(--color-surface)',
         borderBottom: '1px solid var(--color-border)',
       }}
     >
-      <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
+      <div className="max-w-7xl mx-auto flex items-center justify-between gap-2 lg:gap-4">
 
-        {/* Left: Station Identity */}
+        {/* Start: Station Identity */}
         <div
           onClick={() => isOwner && setActiveTab('settings')}
-          className={`flex items-center gap-2.5 flex-shrink-0 ${isOwner ? 'cursor-pointer' : ''}`}
-          title={isOwner ? 'Station Settings' : station.name}
+          className={`flex items-center gap-2 flex-shrink-0 ${isOwner ? 'cursor-pointer' : ''}`}
+          title={isOwner ? (isUrdu ? 'اسٹیشن سیٹنگز' : 'Station Settings') : stationName}
         >
           {/* Logo */}
           <div
-            className="relative w-9 h-9 md:w-10 md:h-10 rounded-xl overflow-hidden flex-shrink-0 flex items-center justify-center"
-            style={{ background: 'var(--color-primary)', boxShadow: '0 2px 8px rgba(4,120,87,0.25)' }}
+            className="w-9 h-9 md:w-10 md:h-10 rounded-xl overflow-hidden flex-shrink-0 flex items-center justify-center shadow-sm"
+            style={{ background: 'var(--color-primary)' }}
           >
             {station.logo ? (
-              <img src={station.logo} alt={station.name} className="w-full h-full object-cover" />
+              <img src={station.logo} alt={stationName} className="w-full h-full object-cover" />
             ) : (
               <Fuel className="w-5 h-5 text-white" />
             )}
@@ -67,20 +70,22 @@ export const Header = () => {
           {/* Titles */}
           <div className="min-w-0">
             <h1
-              className="text-sm md:text-base font-bold tracking-tight truncate leading-tight"
+              className="text-xs sm:text-sm md:text-base font-bold tracking-tight truncate leading-tight"
               style={{ color: 'var(--color-text-primary)' }}
             >
-              {station.name}
+              {stationName}
             </h1>
             <p className="text-[11px] font-urdu truncate leading-tight" style={{ color: 'var(--color-accent)' }}>
-              {isUrdu ? `مالک: ${station.owner}` : `Prop: ${station.owner}`}
+              {isUrdu ? `مالک: ${ownerName}` : `Prop: ${ownerName}`}
             </p>
           </div>
         </div>
 
         {/* Center: Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-0.5 p-1 rounded-xl"
-             style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }}>
+        <nav
+          className="hidden md:flex items-center gap-0.5 lg:gap-1 p-1 rounded-xl flex-shrink min-w-0 overflow-x-auto no-scrollbar"
+          style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }}
+        >
           {navLinks.map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
@@ -88,7 +93,7 @@ export const Header = () => {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-semibold text-xs transition-all"
+                className="flex items-center gap-1.5 px-2 lg:px-2.5 xl:px-3 py-1.5 rounded-lg text-xs transition-all flex-shrink-0"
                 style={{
                   background: isActive ? 'var(--color-surface)' : 'transparent',
                   color: isActive ? 'var(--color-primary)' : 'var(--color-text-secondary)',
@@ -103,53 +108,27 @@ export const Header = () => {
           })}
         </nav>
 
-        {/* Right: Controls */}
-        <div className="flex items-center gap-1.5 md:gap-2 flex-shrink-0">
+        {/* End: Controls */}
+        <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
 
           {/* Language Toggle */}
           <button
             onClick={toggleLanguage}
-            className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all"
+            className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all flex-shrink-0 shadow-sm"
             style={{
               background: 'var(--color-accent-light)',
               color: 'var(--color-primary)',
               border: '1px solid #A7F3D0',
             }}
-            title={isUrdu ? 'Switch to English' : 'اردو زبان'}
+            title={isUrdu ? 'Switch to English' : 'اردو زبان منتخب کریں'}
           >
-            <Languages className="w-3.5 h-3.5" />
-            <span>{isUrdu ? 'ENG' : 'اردو'}</span>
+            <Languages className="w-3.5 h-3.5 flex-shrink-0" />
+            <span className={isUrdu ? 'font-sans' : 'font-urdu'}>{isUrdu ? 'English' : 'اردو'}</span>
           </button>
-
-          {/* Live Fuel Rates — desktop only */}
-          <div
-            className="hidden lg:flex items-center gap-2.5 text-xs px-3 py-1.5 rounded-lg"
-            style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }}
-          >
-            <div className="flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: 'var(--color-primary)' }} />
-              <span className="font-urdu" style={{ color: 'var(--color-text-secondary)' }}>
-                {isUrdu ? 'پٹرول:' : 'Petrol:'}
-              </span>
-              <span className="font-bold font-mono" style={{ color: 'var(--color-primary)' }}>
-                {formatPKR(rates.petrol.selling)}
-              </span>
-            </div>
-            <span className="w-px h-3" style={{ background: 'var(--color-border)' }} />
-            <div className="flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: 'var(--color-diesel)' }} />
-              <span className="font-urdu" style={{ color: 'var(--color-text-secondary)' }}>
-                {isUrdu ? 'ڈیزل:' : 'Diesel:'}
-              </span>
-              <span className="font-bold font-mono" style={{ color: 'var(--color-diesel)' }}>
-                {formatPKR(rates.diesel.selling)}
-              </span>
-            </div>
-          </div>
 
           {/* Online / Offline indicator */}
           <div
-            className="flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-bold uppercase"
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase flex-shrink-0"
             style={{
               background: isOnline ? 'var(--color-success-light)' : 'var(--color-error-light)',
               color: isOnline ? 'var(--color-success)' : 'var(--color-error)',
@@ -159,12 +138,12 @@ export const Header = () => {
             {isOnline ? (
               <>
                 <span className="w-1.5 h-1.5 rounded-full animate-pulse-dot" style={{ background: 'var(--color-success)' }} />
-                <span className="hidden sm:inline font-urdu">{isUrdu ? 'آن لائن' : 'Live'}</span>
+                <span className="font-urdu whitespace-nowrap">{isUrdu ? 'آن لائن' : 'Live'}</span>
               </>
             ) : (
               <>
-                <WifiOff className="w-3 h-3" />
-                <span className="hidden sm:inline font-urdu">{isUrdu ? 'آف لائن' : 'Offline'}</span>
+                <WifiOff className="w-3 h-3 flex-shrink-0" />
+                <span className="font-urdu whitespace-nowrap">{isUrdu ? 'آف لائن' : 'Offline'}</span>
               </>
             )}
           </div>
@@ -172,7 +151,7 @@ export const Header = () => {
           {/* User Badge */}
           {currentUser && (
             <div
-              className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs"
+              className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs flex-shrink-0"
               style={{
                 background: 'var(--color-surface-2)',
                 border: '1px solid var(--color-border)',
@@ -184,7 +163,7 @@ export const Header = () => {
               ) : (
                 <User className="w-3.5 h-3.5 flex-shrink-0" style={{ color: 'var(--color-warning)' }} />
               )}
-              <span className="font-semibold truncate max-w-[110px]">{currentUser.name}</span>
+              <span className="font-semibold truncate max-w-[85px] lg:max-w-[120px]">{currentUser.name}</span>
             </div>
           )}
 
@@ -192,7 +171,7 @@ export const Header = () => {
           {currentUser && (
             <button
               onClick={logout}
-              className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all"
+              className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex-shrink-0"
               style={{
                 background: 'var(--color-error-light)',
                 color: 'var(--color-error)',
@@ -200,15 +179,15 @@ export const Header = () => {
               }}
               title={isUrdu ? 'لاگ آؤٹ' : 'Logout'}
             >
-              <LogOut className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline font-urdu">{isUrdu ? 'لاگ آؤٹ' : 'Logout'}</span>
+              <LogOut className="w-3.5 h-3.5 flex-shrink-0" />
+              <span className="hidden xl:inline font-urdu">{isUrdu ? 'لاگ آؤٹ' : 'Logout'}</span>
             </button>
           )}
 
           {/* Mobile Settings Button */}
           <button
             onClick={() => setActiveTab('settings')}
-            className="md:hidden w-8 h-8 rounded-lg flex items-center justify-center transition-all"
+            className="md:hidden w-8 h-8 rounded-lg flex items-center justify-center transition-all flex-shrink-0"
             style={{
               background: 'var(--color-surface-2)',
               border: '1px solid var(--color-border)',
@@ -221,34 +200,51 @@ export const Header = () => {
         </div>
       </div>
 
-      {/* Mobile Rate Ticker */}
+      {/* Fuel Rates & Storage Tank Balance Strip */}
       <div
-        className="lg:hidden mt-2 pt-2 flex items-center justify-between text-xs px-0.5"
-        style={{ borderTop: '1px solid var(--color-border)' }}
+        className="mt-2 pt-2 border-t border-slate-100 flex items-center justify-between gap-2 text-xs flex-wrap"
       >
-        <div className="flex items-center gap-1.5">
-          <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: 'var(--color-primary)' }} />
-          <span className="font-urdu" style={{ color: 'var(--color-text-secondary)' }}>
-            {isUrdu ? 'پٹرول:' : 'Petrol:'}
-          </span>
-          <span className="font-bold font-mono" style={{ color: 'var(--color-primary)' }}>
-            {formatPKR(rates.petrol.selling)}
-          </span>
+        {/* Live Selling Rates */}
+        <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-1.5 px-2 sm:px-2.5 py-0.5 rounded-lg bg-emerald-50 border border-emerald-200">
+            <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: 'var(--color-primary)' }} />
+            <span className="font-urdu" style={{ color: 'var(--color-text-secondary)' }}>
+              {isUrdu ? 'پٹرول ریٹ:' : 'Petrol:'}
+            </span>
+            <span className="font-bold font-mono text-emerald-800" dir="ltr">
+              {formatPKR(rates?.petrol?.selling || 0)}
+            </span>
+          </div>
+
+          <div className="flex items-center gap-1.5 px-2 sm:px-2.5 py-0.5 rounded-lg bg-amber-50 border border-amber-200">
+            <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: 'var(--color-diesel)' }} />
+            <span className="font-urdu" style={{ color: 'var(--color-text-secondary)' }}>
+              {isUrdu ? 'ڈیزل ریٹ:' : 'Diesel:'}
+            </span>
+            <span className="font-bold font-mono text-amber-800" dir="ltr">
+              {formatPKR(rates?.diesel?.selling || 0)}
+            </span>
+          </div>
         </div>
-        <span className="w-px h-3 mx-1" style={{ background: 'var(--color-border)' }} />
-        <div className="flex items-center gap-1.5">
-          <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: 'var(--color-diesel)' }} />
-          <span className="font-urdu" style={{ color: 'var(--color-text-secondary)' }}>
-            {isUrdu ? 'ڈیزل:' : 'Diesel:'}
-          </span>
-          <span className="font-bold font-mono" style={{ color: 'var(--color-diesel)' }}>
-            {formatPKR(rates.diesel.selling)}
-          </span>
+
+        {/* Live Storage Tank Balances */}
+        <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-1.5 text-[11px] px-2 py-0.5 rounded-lg bg-slate-50 border border-slate-200">
+            <Fuel className="w-3 h-3 text-emerald-600 flex-shrink-0" />
+            <span className="font-urdu text-slate-500">{isUrdu ? 'پٹرول اسٹاک:' : 'Petrol Tank:'}</span>
+            <span className="font-bold font-mono text-slate-800" dir="ltr">
+              {formatLitres(tanks?.petrol?.currentStock || 0)}
+            </span>
+          </div>
+
+          <div className="flex items-center gap-1.5 text-[11px] px-2 py-0.5 rounded-lg bg-slate-50 border border-slate-200">
+            <Fuel className="w-3 h-3 text-amber-600 flex-shrink-0" />
+            <span className="font-urdu text-slate-500">{isUrdu ? 'ڈیزل اسٹاک:' : 'Diesel Tank:'}</span>
+            <span className="font-bold font-mono text-slate-800" dir="ltr">
+              {formatLitres(tanks?.diesel?.currentStock || 0)}
+            </span>
+          </div>
         </div>
-        <span className="w-px h-3 mx-1" style={{ background: 'var(--color-border)' }} />
-        <span className="text-[10px]" style={{ color: 'var(--color-text-muted)' }}>
-          {isUrdu ? 'فیول اسٹیشن' : 'Fuel Station'}
-        </span>
       </div>
     </header>
   );

@@ -413,6 +413,15 @@ export const AppProvider = ({ children }) => {
     };
   }, []);
 
+  // Persistent local cache safeguard across restarts
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    } catch (e) {
+      console.warn('LocalStorage save error:', e);
+    }
+  }, [data]);
+
   const [isLoading, setIsLoading] = useState(false);
   const [isBackendConnected, setIsBackendConnected] = useState(true);
 
@@ -527,26 +536,26 @@ export const AppProvider = ({ children }) => {
           lastMeter: Number(n.lastMeter) || 0,
           isActive: n.isActive,
         })) : prev.nozzles,
-        loads: (loadsRes.loads || []).map(l => ({
+        loads: (loadsRes.loads && loadsRes.loads.length > 0) ? loadsRes.loads.map(l => ({
           ...l,
           fuelType: l.fuelType?.toLowerCase() === 'petrol' ? 'petrol' : 'diesel',
           status: l.status?.toUpperCase() || 'ACTIVE',
-        })),
-        sales: (salesRes.sales || []).map(s => ({
+        })) : prev.loads,
+        sales: (salesRes.sales && salesRes.sales.length > 0) ? salesRes.sales.map(s => ({
           ...s,
           fuelType: s.fuelType?.toLowerCase() === 'petrol' ? 'petrol' : 'diesel',
-        })),
-        bulkSales: (bulkRes.bulkSales || []).map(b => ({
+        })) : prev.sales,
+        bulkSales: (bulkRes.bulkSales && bulkRes.bulkSales.length > 0) ? bulkRes.bulkSales.map(b => ({
           ...b,
           fuelType: b.fuelType?.toLowerCase() === 'petrol' ? 'petrol' : 'diesel',
-        })),
-        customers: custRes.customers || [],
-        khataTransactions: (khataRes.transactions || []).map(k => ({
+        })) : prev.bulkSales,
+        customers: (custRes.customers && custRes.customers.length > 0) ? custRes.customers : prev.customers,
+        khataTransactions: (khataRes.transactions && khataRes.transactions.length > 0) ? khataRes.transactions.map(k => ({
           ...k,
           type: k.type === 'Payment' ? 'payment_received' : 'credit_sale',
-        })),
-        expenses: expRes.expenses || [],
-        shiftClosings: shiftsRes.shifts || [],
+        })) : prev.khataTransactions,
+        expenses: (expRes.expenses && expRes.expenses.length > 0) ? expRes.expenses : prev.expenses,
+        shiftClosings: (shiftsRes.shifts && shiftsRes.shifts.length > 0) ? shiftsRes.shifts : prev.shiftClosings,
       }));
 
       setIsBackendConnected(true);
@@ -675,6 +684,12 @@ export const AppProvider = ({ children }) => {
         ...newRates,
       }
     }));
+    stationApi.updateRates({
+      petrolRate: newRates.petrol?.selling,
+      dieselRate: newRates.diesel?.selling,
+      petrolPurchaseRate: newRates.petrol?.purchase,
+      dieselPurchaseRate: newRates.diesel?.purchase,
+    }).catch(err => console.warn('Background sync rates error:', err.message));
     showToast('Fuel rates updated!');
   };
 
@@ -793,6 +808,22 @@ export const AppProvider = ({ children }) => {
         loads: [newLoad, ...(prev.loads || [])],
       };
     });
+
+    loadsApi.create({
+      id: loadId,
+      loadNo: loadId,
+      vehicleType,
+      vehicleNo: newLoad.vehicleNo,
+      fuelType: fuelType === 'petrol' ? 'Petrol' : 'Diesel',
+      litresReceived: litres,
+      purchaseRate: rate,
+      totalCost,
+      supplierName,
+      driverName,
+      notes,
+      expenses: newExpenses,
+      date: newLoad.date,
+    }).catch(err => console.warn('Background sync load error:', err.message));
 
     showToast(`✅ ${vehicleType} Load (${formatLitres(litres)}) Added! ID: ${loadId}`);
     return newLoad;
@@ -1160,6 +1191,24 @@ export const AppProvider = ({ children }) => {
     });
 
     if (savedSaleId) {
+      salesApi.create({
+        id: savedSaleId,
+        nozzleId,
+        fuelType: fuelType === 'petrol' ? 'Petrol' : 'Diesel',
+        openingMeter: op,
+        closingMeter: cl,
+        litresSold,
+        rate,
+        totalSaleValue,
+        cashReceived: cash,
+        creditIssued: credit,
+        creditCustomerId: credit > 0 ? (creditCustomerId || null) : null,
+        creditCustomerName: credit > 0 ? (creditCustomerName || '') : '',
+        operatorName: operatorName || 'Shift Cashier',
+        notes,
+        date: new Date().toISOString(),
+      }).catch(err => console.warn('Background sync sale error:', err.message));
+
       showToast(`✅ Shift Recorded! Sold ${formatLitres(litresSold)} (${formatPKR(totalSaleValue)})`);
     }
     return savedSaleId;
@@ -1247,6 +1296,7 @@ export const AppProvider = ({ children }) => {
       };
     });
 
+    salesApi.delete(saleId).catch(err => console.warn('Background sync delete sale error:', err.message));
     showToast(`Shift sale voided and stock restored (+${formatLitres(targetSale.litresSold)})`);
   };
 
@@ -1395,6 +1445,23 @@ export const AppProvider = ({ children }) => {
       };
     });
 
+    bulkApi.create({
+      id: bulkId,
+      vehicleNo: cleanVehicleNo,
+      customerName: customerName.trim() || 'Bulk Fleet Customer',
+      customerId: effCustId || null,
+      fuelType: fuelType === 'petrol' ? 'Petrol' : 'Diesel',
+      litres: vol,
+      rate: unitRate,
+      totalAmount,
+      cashPaid: cash,
+      khataAmount: khataBalance,
+      paymentType: paymentType === 'khata' ? (cash > 0 ? 'Partial' : 'Khata') : 'Cash',
+      operatorName: operatorName || 'Bulk Dispatch Operator',
+      notes,
+      date: new Date().toISOString(),
+    }).catch(err => console.warn('Background sync bulk error:', err.message));
+
     showToast(`✅ Bulk Dumping Recorded: ${formatLitres(vol)} to ${cleanVehicleNo}!`);
     return bulkId;
   };
@@ -1480,6 +1547,7 @@ export const AppProvider = ({ children }) => {
       };
     });
 
+    bulkApi.delete(bulkId).catch(err => console.warn('Background sync delete bulk error:', err.message));
     showToast(`Bulk dumping voided and stock restored (+${formatLitres(targetBulk.litres)})`);
   };
 
@@ -1629,6 +1697,13 @@ export const AppProvider = ({ children }) => {
       };
     });
 
+    khataApi.recordPayment({
+      customerId,
+      amount: amt,
+      notes,
+      date: new Date().toISOString(),
+    }).catch(err => console.warn('Background sync payment error:', err.message));
+
     showToast(`Payment of ${formatPKR(amt)} received!`);
   };
 
@@ -1663,6 +1738,7 @@ export const AppProvider = ({ children }) => {
       };
     });
 
+    khataApi.deleteTransaction(txId).catch(err => console.warn('Background sync delete khata error:', err.message));
     showToast('Khata transaction deleted and ledger adjusted');
   };
 
@@ -1703,6 +1779,15 @@ export const AppProvider = ({ children }) => {
       expenses: [newExp, ...(prev.expenses || [])],
     }));
 
+    expensesApi.create({
+      id: newExp.id,
+      category: newExp.category,
+      amount: newExp.amount,
+      paidTo: newExp.paidTo,
+      notes: newExp.notes,
+      date: newExp.date,
+    }).catch(err => console.warn('Background sync expense error:', err.message));
+
     showToast(`خرچہ درج ہوگیا: ${formatPKR(amt)}`);
     return newExp;
   };
@@ -1712,6 +1797,7 @@ export const AppProvider = ({ children }) => {
       ...prev,
       expenses: (prev.expenses || []).filter(e => e.id !== expId),
     }));
+    expensesApi.delete(expId).catch(err => console.warn('Background sync delete expense error:', err.message));
     showToast('خرچہ حذف کر دیا گیا');
   };
 
@@ -1734,6 +1820,16 @@ export const AppProvider = ({ children }) => {
       ...prev,
       customers: [...prev.customers, newCust],
     }));
+
+    customersApi.create({
+      id: newCust.id,
+      name: newCust.name,
+      vehicleNo: newCust.vehicleNo,
+      phone: newCust.phone,
+      balanceKhata: newCust.balanceKhata,
+      notes: newCust.notes,
+    }).catch(err => console.warn('Background sync customer error:', err.message));
+
     showToast(`گاہک ${newCust.name} شامل ہوگیا`);
     return newCust;
   };
@@ -1794,6 +1890,8 @@ export const AppProvider = ({ children }) => {
         return c;
       }),
     }));
+
+    customersApi.update(customerId, updatedFields).catch(err => console.warn('Background sync update customer error:', err.message));
     showToast('گاہک کا ریکارڈ اپڈیٹ ہو گیا');
   };
 
@@ -1926,6 +2024,22 @@ export const AppProvider = ({ children }) => {
       ...prev,
       shiftClosings: [newClosing, ...(prev.shiftClosings || [])],
     }));
+
+    shiftsApi.close({
+      id: newClosing.id,
+      shiftName,
+      operatorName: newClosing.operatorName,
+      date: newClosing.date,
+      totalLitres: totalLitresDispensed,
+      totalRevenue: totalSalesRevenue,
+      totalCash: totalCashCollected,
+      totalCredit: totalCreditIssued,
+      totalExpenses: totalExpensesDeducted,
+      netDrawerCash: expectedDrawerCash,
+      actualDrawerCash: actualCash,
+      discrepancy: cashDiscrepancy,
+      notes: newClosing.notes,
+    }).catch(err => console.warn('Background sync shift error:', err.message));
 
     showToast(`Daily Shift Closed! Net Drawer: ${formatPKR(actualCash)}`);
     return newClosing;

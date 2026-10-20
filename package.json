@@ -6,6 +6,9 @@
   "scripts": {
     "dev": "vite",
     "start": "vite",
+    "server": "node server/src/index.js",
+    "server:dev": "node --watch server/src/index.js",
+    "server:test": "npm --prefix server test",
     "build": "vite build",
     "preview": "vite preview"
   },
@@ -19,8 +22,11 @@
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.4.19",
+    "electron": "^44.9.0",
+    "electron-builder": "^26.15.3",
     "postcss": "^8.4.38",
     "tailwindcss": "^3.4.4",
-    "vite": "^5.3.1"
+    "vite": "^5.3.1",
+    "wait-on": "^9.5.1"
   }
 }
