@@ -44,6 +44,8 @@ export function getAllowedOrigins() {
     'http://127.0.0.1:3001',
     'http://localhost:5173',
     'http://127.0.0.1:5173',
+    'https://hadi-petrol-pump.vercel.app',
+    'https://hadi-petrol-pump.vercel.app/',
   ]);
 
   if (process.env.CORS_ORIGIN) {
@@ -75,7 +77,12 @@ app.use(cors({
     const allowed = getAllowedOrigins();
     const cleanOrigin = origin.trim().replace(/\/$/, '');
 
-    if (allowed.has(origin) || allowed.has(cleanOrigin)) {
+    if (
+      allowed.has(origin) ||
+      allowed.has(cleanOrigin) ||
+      cleanOrigin === 'https://hadi-petrol-pump.vercel.app' ||
+      cleanOrigin.endsWith('.vercel.app')
+    ) {
       return callback(null, true);
     }
 
@@ -83,6 +90,8 @@ app.use(cors({
     return callback(new Error(`CORS blocked for origin: ${origin}`));
   },
   credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
 }));
 
 app.use(express.json({ limit: '10mb' }));
