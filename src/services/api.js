@@ -3,6 +3,8 @@
  * Handles communication with Express REST API over /api
  */
 
+export const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'https://hadi-petrol-pump.onrender.com/api').replace(/\/+$/, '');
+
 const TOKEN_KEY = 'hadi_auth_token';
 
 export function getStoredToken() {
@@ -33,7 +35,20 @@ export async function apiFetch(endpoint, options = {}) {
     headers['Authorization'] = `Bearer ${token}`;
   }
 
-  const response = await fetch(endpoint, {
+  // Resolve complete backend URL avoiding double '/api' segments
+  let url = endpoint;
+  if (!endpoint.startsWith('http://') && !endpoint.startsWith('https://')) {
+    const cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+    if (API_BASE_URL.endsWith('/api') && cleanEndpoint.startsWith('/api/')) {
+      url = `${API_BASE_URL}${cleanEndpoint.slice(4)}`;
+    } else if (API_BASE_URL.endsWith('/api') && cleanEndpoint === '/api') {
+      url = API_BASE_URL;
+    } else {
+      url = `${API_BASE_URL}${cleanEndpoint}`;
+    }
+  }
+
+  const response = await fetch(url, {
     ...options,
     headers,
     credentials: 'include', // Include HTTP-only cookie
